@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Clock, Trash2, Search, Plus, X, Loader2 } from 'lucide-react';
 import { useClockStore } from '../store';
-import { searchTimezones, getTimeInTimezone, getTimezoneOffset, formatTime, TimezoneData } from '../utils';
+import { searchTimezones, TimezoneData } from '../utils';
 import { ClockLocation } from '../types';
 
 export default function Locations() {
@@ -12,22 +12,6 @@ export default function Locations() {
   const [searchResults, setSearchResults] = useState<TimezoneData[]>([]);
   const [showSearch, setShowSearch] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const [currentTimes, setCurrentTimes] = useState<{ [key: string]: Date }>({});
-
-  // Update times every second
-  useEffect(() => {
-    const updateTimes = () => {
-      const times: { [key: string]: Date } = {};
-      locations.forEach(loc => {
-        times[loc.id] = getTimeInTimezone(loc.timezone);
-      });
-      setCurrentTimes(times);
-    };
-
-    updateTimes();
-    const interval = setInterval(updateTimes, 1000);
-    return () => clearInterval(interval);
-  }, [locations]);
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
@@ -47,12 +31,18 @@ export default function Locations() {
     const exists = locations.some(loc => loc.timezone === result.timezone);
     
     if (!exists) {
+      // Get timezone offset for the location
+      const date = new Date();
+      const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+      const tzDate = new Date(date.toLocaleString('en-US', { timeZone: result.timezone }));
+      const offset = (tzDate.getTime() - utcDate.getTime()) / (1000 * 60);
+      
       const newLocation: ClockLocation = {
         id: `${Date.now()}`,
         city: result.city,
         country: result.country,
         timezone: result.timezone,
-        offset: getTimezoneOffset(result.timezone),
+        offset: offset,
       };
       addLocation(newLocation);
       setActiveLocation(newLocation.id);
@@ -131,7 +121,6 @@ export default function Locations() {
           </div>
         ) : (
           locations.map((location) => {
-            const time = currentTimes[location.id];
             return (
               <div
                 key={location.id}
@@ -152,18 +141,10 @@ export default function Locations() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                  {time && (
-                    <div className="text-right">
-                      <p className="text-white font-semibold text-lg tabular-nums">
-                        {formatTime(time)}
-                      </p>
-                      <p className="text-white/40 text-xs">
-                        {location.timezone.split('/')[1]?.replace('_', ' ')}
-                      </p>
-                    </div>
+                <div className="flex items-center gap-2">
+                  {activeLocationId === location.id && (
+                    <div className="w-2 h-2 bg-green-400 rounded-full" title="Active" />
                   )}
-
                   {locations.length > 1 && (
                     <button
                       onClick={(e) => {
