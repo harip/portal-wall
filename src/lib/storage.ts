@@ -25,6 +25,9 @@ export interface PortalWallStorage {
     format: '12' | '24';
     showSeconds: boolean;
   };
+  crypto?: {
+    watchlist: string[];
+  };
   // Future portals can add their own sections here
 }
 

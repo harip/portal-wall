@@ -25,6 +25,12 @@ const portalIcons: PortalIcon[] = [
     label: 'Clock',
     gradient: 'from-purple-400 to-pink-400',
   },
+  {
+    type: 'crypto',
+    icon: '₿',
+    label: 'Crypto',
+    gradient: 'from-orange-400 to-yellow-400',
+  },
 ];
 
 export default function PortalIconBar() {
