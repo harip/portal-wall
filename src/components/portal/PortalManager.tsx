@@ -10,7 +10,7 @@ export default function PortalManager() {
   const { portals } = usePortalStore();
 
   return (
-    <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-6 p-6 min-h-screen">
+    <div className="flex flex-col sm:flex-row flex-wrap justify-center items-start gap-6 px-6 pt-2 pb-6">
       {portals.map((portal) => (
         <div 
           key={portal.id} 

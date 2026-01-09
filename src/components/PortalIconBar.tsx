@@ -52,7 +52,7 @@ export default function PortalIconBar() {
   };
 
   return (
-    <div className="flex justify-center gap-3 mt-6">
+    <div className="flex justify-center gap-3">
       {portalIcons.map((portalIcon) => {
         const isOpen = isPortalOpen(portalIcon.type);
         const isTop = isPortalOnTop(portalIcon.type);
@@ -80,10 +80,20 @@ export default function PortalIconBar() {
             <div className={`
               text-3xl w-12 h-12 flex items-center justify-center rounded-full
               bg-gradient-to-br ${portalIcon.gradient}
-              ${isOpen && isTop ? 'ring-2 ring-white/40' : ''}
             `}>
               {portalIcon.icon}
             </div>
+
+            {/* Active indicator dot */}
+            {isOpen && isTop && (
+              <motion.div
+                layoutId="active-portal"
+                className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 shadow-lg shadow-green-500/50"
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+              />
+            )}
           </motion.button>
         );
       })}
