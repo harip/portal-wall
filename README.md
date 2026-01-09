@@ -77,8 +77,6 @@ portal-wall/
 
 Each window is a self-contained application. See [ARCHITECTURE.md](./ARCHITECTURE.md) for guidelines on creating new windows.
 
-## 👤 Git Configuration
-
 ## 📄 License
 
 MIT
