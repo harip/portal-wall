@@ -5,6 +5,7 @@ import Portal from './Portal';
 import { usePortalStore } from '@/lib/stores/portalStore';
 import WeatherApp from '@/portals/weather/WeatherApp';
 import ClockApp from '@/portals/clock/ClockApp';
+import CricketApp from '@/portals/cricket/CricketApp';
 import { motion, AnimatePresence } from 'framer-motion';
 import { portalAnimations, portalTransition } from '@/lib/animations';
 
@@ -31,6 +32,7 @@ export default function PortalManager() {
               <Portal portal={activePortal}>
                 {activePortal.type === 'weather' && <WeatherApp />}
                 {activePortal.type === 'clock' && <ClockApp />}
+                {activePortal.type === 'cricket' && <CricketApp />}
               </Portal>
             </motion.div>
           )}
@@ -46,6 +48,7 @@ export default function PortalManager() {
           <Portal portal={portal}>
             {portal.type === 'weather' && <WeatherApp />}
             {portal.type === 'clock' && <ClockApp />}
+            {portal.type === 'cricket' && <CricketApp />}
           </Portal>
         </div>
       ))}
