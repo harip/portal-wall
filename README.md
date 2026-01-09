@@ -79,10 +79,6 @@ Each window is a self-contained application. See [ARCHITECTURE.md](./ARCHITECTUR
 
 ## 👤 Git Configuration
 
-This repository is configured with a custom author:
-- **Name**: harip
-- **Email**: charanp@gmail.com
-
 ## 📄 License
 
 MIT
