@@ -26,10 +26,34 @@ const portalIcons: PortalIcon[] = [
     gradient: 'from-purple-400 to-pink-400',
   },
   {
-    type: 'crypto',
-    icon: '₿',
-    label: 'Crypto',
-    gradient: 'from-orange-400 to-yellow-400',
+    type: 'calendar',
+    icon: '📅',
+    label: 'Calendar',
+    gradient: 'from-green-400 to-emerald-400',
+  },
+  {
+    type: 'countdown',
+    icon: '⏱️',
+    label: 'Countdown',
+    gradient: 'from-orange-400 to-red-400',
+  },
+  {
+    type: 'quicksave',
+    icon: '📌',
+    label: 'Quick Save',
+    gradient: 'from-indigo-400 to-purple-400',
+  },
+  {
+    type: 'unitconverter',
+    icon: '📏',
+    label: 'Unit Converter',
+    gradient: 'from-teal-400 to-cyan-400',
+  },
+  {
+    type: 'passwordgen',
+    icon: '🔐',
+    label: 'Password Generator',
+    gradient: 'from-amber-400 to-orange-400',
   },
 ];
 

@@ -19,7 +19,8 @@ export default function Home() {
     if (hydrated && portals.length === 0) {
       openPortal('weather', 'Weather');
       openPortal('clock', 'Clock');
-      openPortal('crypto', 'Crypto');
+      openPortal('calendar', 'Calendar');
+      openPortal('countdown', 'Countdown');
     }
   }, [hydrated, portals.length, openPortal]);
 

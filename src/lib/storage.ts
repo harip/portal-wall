@@ -25,8 +25,46 @@ export interface PortalWallStorage {
     format: '12' | '24';
     showSeconds: boolean;
   };
-  crypto?: {
-    watchlist: string[];
+  calendar?: {
+    events: Array<{
+      id: string;
+      title: string;
+      description?: string;
+      date: string;
+      time?: string;
+      color: string;
+      reminder?: boolean;
+    }>;
+  };
+  countdown?: {
+    countdowns: Array<{
+      id: string;
+      title: string;
+      targetDate: string;
+      targetTime?: string;
+      color: string;
+      category: string;
+    }>;
+  };
+  quicksave?: {
+    items: Array<{
+      id: string;
+      title: string;
+      category: string;
+      createdAt: number;
+    }>;
+  };
+  unitconverter?: {
+    conversions: Array<{
+      id: string;
+      fromValue: number;
+      fromUnit: string;
+      toValue: number;
+      toUnit: string;
+      unitType: string;
+      createdAt: number;
+    }>;
+    favorites: string[];
   };
   // Future portals can add their own sections here
 }

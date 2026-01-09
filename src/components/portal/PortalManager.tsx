@@ -5,7 +5,11 @@ import Portal from './Portal';
 import { usePortalStore } from '@/lib/stores/portalStore';
 import WeatherApp from '@/portals/weather/WeatherApp';
 import ClockApp from '@/portals/clock/ClockApp';
-import CryptoApp from '@/portals/crypto/CryptoApp';
+import CalendarApp from '@/portals/calendar/CalendarApp';
+import CountdownApp from '@/portals/countdown/CountdownApp';
+import QuickSaveApp from '@/portals/quicksave/QuickSaveApp';
+import UnitConverterApp from '@/portals/unitconverter/UnitConverterApp';
+import PasswordGeneratorApp from '@/portals/passwordgen/PasswordGeneratorApp';
 import { motion, AnimatePresence } from 'framer-motion';
 import { portalAnimations, portalTransition } from '@/lib/animations';
 
@@ -32,7 +36,11 @@ export default function PortalManager() {
               <Portal portal={activePortal}>
                 {activePortal.type === 'weather' && <WeatherApp />}
                 {activePortal.type === 'clock' && <ClockApp />}
-                {activePortal.type === 'crypto' && <CryptoApp />}
+                {activePortal.type === 'calendar' && <CalendarApp />}
+                {activePortal.type === 'countdown' && <CountdownApp />}
+                {activePortal.type === 'quicksave' && <QuickSaveApp />}
+                {activePortal.type === 'unitconverter' && <UnitConverterApp />}
+                {activePortal.type === 'passwordgen' && <PasswordGeneratorApp />}
               </Portal>
             </motion.div>
           )}
@@ -48,7 +56,11 @@ export default function PortalManager() {
           <Portal portal={portal}>
             {portal.type === 'weather' && <WeatherApp />}
             {portal.type === 'clock' && <ClockApp />}
-            {portal.type === 'crypto' && <CryptoApp />}
+            {portal.type === 'calendar' && <CalendarApp />}
+            {portal.type === 'countdown' && <CountdownApp />}
+            {portal.type === 'quicksave' && <QuickSaveApp />}
+            {portal.type === 'unitconverter' && <UnitConverterApp />}
+            {portal.type === 'passwordgen' && <PasswordGeneratorApp />}
           </Portal>
         </div>
       ))}

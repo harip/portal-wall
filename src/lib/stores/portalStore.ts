@@ -62,7 +62,8 @@ export const usePortalStore = create<PortalStore>((set, get) => ({
       isOpen: true,
     };
 
-    const newPortals = [...get().portals, newPortal];
+    // Add new portal at the beginning (top) of the array
+    const newPortals = [newPortal, ...get().portals];
     set({ portals: newPortals });
     savePortalsToStorage(newPortals);
   },
