@@ -40,6 +40,9 @@ export default function PortalIconBar() {
       // Portal doesn't exist, open it
       openPortal(portalIcon.type, portalIcon.label);
     }
+
+    // Scroll to top for better UX on mobile
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const isPortalOpen = (type: PortalType) => {
