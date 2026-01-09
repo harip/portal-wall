@@ -3,9 +3,15 @@
 import React from 'react';
 import { Cloud, Sun, CloudRain, Wind, Droplets, Eye, Gauge, Sunrise, Sunset, Thermometer, AlertCircle } from 'lucide-react';
 import { useWeatherStore } from '../store';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CurrentWeather() {
-  const { currentWeather, temperatureUnit, loading, error } = useWeatherStore();
+  const { currentWeather, temperatureUnit, loading, error, savedLocations, activeLocationId, setActiveLocation } = useWeatherStore();
+
+  const currentIndex = savedLocations.findIndex(loc => loc.id === activeLocationId);
+  const activeLocation = savedLocations[currentIndex];
+  const nextLocation = savedLocations[currentIndex + 1];
+  const prevLocation = savedLocations[currentIndex - 1];
 
   if (loading) {
     return (
@@ -52,10 +58,81 @@ export default function CurrentWeather() {
 
   return (
     <div className="p-6 overflow-auto h-full">
-      {/* Location */}
-      <div className="text-center mb-4">
-        <h3 className="text-lg font-medium text-white/90">{currentWeather.location}</h3>
-        <p className="text-xs text-white/50">Today</p>
+      {/* Horizontal Scrollable Location */}
+      <div className="relative flex items-center justify-center mb-4 h-12">
+        {/* Previous Location (Left - Faded) */}
+        {prevLocation && (
+          <button
+            onClick={() => setActiveLocation(prevLocation.id)}
+            className="absolute left-0 flex items-center pl-2 pr-12 h-full"
+          >
+            <div
+              className="text-base font-medium truncate max-w-[180px]"
+              style={{
+                background: 'linear-gradient(to right, rgba(255,255,255,0.35), transparent)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              {prevLocation.city}, <span className="text-sm">{prevLocation.country}</span>
+            </div>
+          </button>
+        )}
+
+        {/* Current Location (Center - Full) */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeLocationId}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2 }}
+            className="text-center"
+          >
+            <h3 className="text-lg font-medium text-white/90">
+              {activeLocation?.city}, <span className="text-sm text-white/60">{activeLocation?.country}</span>
+            </h3>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Next Location (Right - Faded) */}
+        {nextLocation && (
+          <button
+            onClick={() => setActiveLocation(nextLocation.id)}
+            className="absolute right-0 flex items-center justify-end pr-2 pl-12 h-full"
+          >
+            <div
+              className="text-base font-medium truncate max-w-[180px] text-right"
+              style={{
+                background: 'linear-gradient(to left, rgba(255,255,255,0.35), transparent)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              {nextLocation.city}, <span className="text-sm">{nextLocation.country}</span>
+            </div>
+          </button>
+        )}
+
+        {/* Location Indicator Dots */}
+        {savedLocations.length > 1 && (
+          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 flex items-center gap-1">
+            {savedLocations.map((location, index) => (
+              <button
+                key={location.id}
+                onClick={() => setActiveLocation(location.id)}
+                className={`transition-all ${
+                  index === currentIndex
+                    ? 'w-4 h-1 bg-white/80 rounded-full'
+                    : 'w-1 h-1 bg-white/30 rounded-full hover:bg-white/50'
+                }`}
+                aria-label={`Go to ${location.city}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Current Temperature */}
