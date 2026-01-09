@@ -5,15 +5,20 @@ import PortalManager from '@/components/portal/PortalManager';
 import { usePortalStore } from '@/lib/stores/portalStore';
 
 export default function Home() {
-  const { openPortal, portals } = usePortalStore();
+  const { openPortal, portals, hydrated, setHydrated } = usePortalStore();
 
-  // Auto-open portals on initial load
+  // Hydrate from localStorage first
   useEffect(() => {
-    if (portals.length === 0) {
+    setHydrated();
+  }, [setHydrated]);
+
+  // Auto-open portals on initial load if none exist
+  useEffect(() => {
+    if (hydrated && portals.length === 0) {
       openPortal('weather', 'Weather');
       openPortal('clock', 'Clock');
     }
-  }, []);
+  }, [hydrated, portals.length, openPortal]);
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">

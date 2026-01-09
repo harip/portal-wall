@@ -10,13 +10,15 @@ export default function PortalManager() {
   const { portals } = usePortalStore();
 
   return (
-    <>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6 h-full">
       {portals.map((portal) => (
-        <Portal key={portal.id} portal={portal}>
-          {portal.type === 'weather' && <WeatherApp />}
-          {portal.type === 'clock' && <ClockApp />}
-        </Portal>
+        <div key={portal.id} className="min-h-[400px]">
+          <Portal portal={portal}>
+            {portal.type === 'weather' && <WeatherApp />}
+            {portal.type === 'clock' && <ClockApp />}
+          </Portal>
+        </div>
       ))}
-    </>
+    </div>
   );
 }
