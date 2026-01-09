@@ -63,7 +63,6 @@ portal-wall/
 
 ## 🎨 Features
 
-- ✅ Draggable and resizable windows
 - ✅ Each window is a complete application
 - ✅ Window state persistence (positions, sizes)
 - ✅ Minimize/maximize/close windows
