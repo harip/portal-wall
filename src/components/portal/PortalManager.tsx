@@ -14,7 +14,7 @@ export default function PortalManager() {
       {portals.map((portal) => (
         <div 
           key={portal.id} 
-          className="w-full sm:w-[450px] h-[450px] flex-shrink-0"
+          className="w-full sm:w-[600px] h-[600px] flex-shrink-0"
         >
           <Portal portal={portal}>
             {portal.type === 'weather' && <WeatherApp />}

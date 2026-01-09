@@ -60,14 +60,55 @@ export default function Reminders() {
     if (!selectedLocation) return;
 
     if (applyToAll) {
-      // Add reminder for all locations
+      // Convert the selected time to each timezone
+      // First, create a Date object in the selected location's timezone
+      const selectedDateTime = new Date(dateTimeString);
+      
+      // Get the time in the selected location's timezone
+      const selectedTzTime = new Date(
+        selectedDateTime.toLocaleString('en-US', { timeZone: selectedLocation.timezone })
+      );
+      
+      // Get UTC timestamp
+      const utcTimestamp = selectedDateTime.getTime();
+      
       locations.forEach(location => {
+        // Calculate the offset difference and adjust the time
+        let adjustedDateTime: string;
+        
+        if (location.id === selectedLocationId) {
+          // Same location, use original time
+          adjustedDateTime = dateTimeString;
+        } else {
+          // Different location, convert the time
+          // Create date in original timezone
+          const originalDate = new Date(dateTimeString);
+          
+          // Format it in the target timezone
+          const targetTzString = originalDate.toLocaleString('en-US', { 
+            timeZone: location.timezone,
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+          });
+          
+          // Parse the formatted string to get the adjusted date/time
+          const [datePart, timePart] = targetTzString.split(', ');
+          const [month, day, year] = datePart.split('/');
+          const [hour, minute] = timePart.split(':');
+          
+          adjustedDateTime = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour}:${minute}`;
+        }
+        
         const newReminder: Reminder = {
-          id: `${Date.now()}-${location.id}`,
+          id: `${Date.now()}-${location.id}-${Math.random()}`,
           locationId: location.id,
           locationName: `${location.city}, ${location.country}`,
           timezone: location.timezone,
-          dateTime: dateTimeString,
+          dateTime: adjustedDateTime,
           description,
           notify: enableNotifications,
           notified: false,
