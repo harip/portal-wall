@@ -24,6 +24,8 @@ jobs:
         run: npm ci
 
       - name: Build (static export via next.config.js)
+        env:
+          NEXT_PUBLIC_OPENWEATHER_API_KEY: ${{ secrets.NEXT_PUBLIC_OPENWEATHER_API_KEY }}
         run: npm run build
         # With output:'export', Next writes the static site to ./out
 
