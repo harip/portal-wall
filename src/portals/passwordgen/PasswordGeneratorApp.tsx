@@ -33,9 +33,11 @@ export default function PasswordGeneratorApp() {
   const updateOption = <K extends keyof PasswordOptions>(key: K, value: PasswordOptions[K]) => {
     const newOptions = { ...options, [key]: value };
     setOptions(newOptions);
-    if (password) {
-      setStrength(calculateStrength(password, newOptions));
-    }
+    // Auto-generate new password when options change
+    const newPassword = generatePassword(newOptions);
+    setPassword(newPassword);
+    setStrength(calculateStrength(newPassword, newOptions));
+    setCopied(false);
   };
 
   // Generate on mount
@@ -167,17 +169,6 @@ export default function PasswordGeneratorApp() {
             />
             <span className="text-sm text-white/90">Exclude Similar (0, O, l, 1)</span>
           </label>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="pt-4 border-t border-white/10">
-          <button
-            onClick={handleGenerate}
-            className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-          >
-            <RefreshCw size={16} />
-            Generate New Password
-          </button>
         </div>
       </div>
     </div>

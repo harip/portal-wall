@@ -16,14 +16,20 @@ import { portalAnimations, portalTransition } from '@/lib/animations';
 export default function PortalManager() {
   const { portals } = usePortalStore();
 
+  // Don't render anything if there are no portals
+  if (!portals || portals.length === 0) {
+    return null;
+  }
+
   // Get the active portal (first in array)
   const activePortal = portals[0];
+  const remainingPortals = portals.slice(1);
 
   return (
     <div className="flex flex-col sm:flex-row flex-wrap justify-center items-start gap-6 px-6 pt-2 pb-6">
-      <div className="w-full sm:w-[600px] h-[600px] flex-shrink-0 relative">
-        <AnimatePresence mode="wait" initial={false}>
-          {activePortal && (
+      {activePortal && (
+        <div className="w-full sm:w-[600px] h-[600px] flex-shrink-0 relative">
+          <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={activePortal.id}
               initial="initial"
@@ -43,12 +49,12 @@ export default function PortalManager() {
                 {activePortal.type === 'passwordgen' && <PasswordGeneratorApp />}
               </Portal>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+          </AnimatePresence>
+        </div>
+      )}
       
       {/* Show remaining portals */}
-      {portals.slice(1).map((portal) => (
+      {remainingPortals.map((portal) => (
         <div 
           key={portal.id}
           className="w-full sm:w-[600px] h-[600px] flex-shrink-0"

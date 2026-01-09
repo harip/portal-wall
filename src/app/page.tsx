@@ -35,7 +35,7 @@ export default function Home() {
       {/* Header */}
       <div className="relative z-20 pt-8 pb-2 px-8">
         <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-center">
-          Portal Wall
+          Wall
         </h1>
         <p className="text-center text-slate-300 mt-2 text-sm">
           Your personal dashboard

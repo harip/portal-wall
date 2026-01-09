@@ -6,6 +6,7 @@ interface PortalStore {
   portals: PortalState[];
   openPortal: (type: PortalType, title: string) => void;
   bringToFront: (type: PortalType) => void;
+  closePortal: (type: PortalType) => void;
   hydrated: boolean;
   setHydrated: () => void;
 }
@@ -85,5 +86,11 @@ export const usePortalStore = create<PortalStore>((set, get) => ({
 
     set({ portals: newPortals });
     savePortalsToStorage(newPortals);
+  },
+
+  closePortal: (type: PortalType) => {
+    const portals = get().portals.filter((p) => p.type !== type);
+    set({ portals });
+    savePortalsToStorage(portals);
   },
 }));

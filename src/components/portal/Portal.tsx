@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 import { PortalState, PortalType } from '@/types/portal';
 import { motion } from 'framer-motion';
 import { PortalHeaderProvider, usePortalHeader } from './PortalHeaderContext';
+import { usePortalStore } from '@/lib/stores/portalStore';
 
 interface PortalProps {
   portal: PortalState;
@@ -22,6 +24,7 @@ const portalHeaderIcons: Record<PortalType, string> = {
 
 function PortalHeader({ portal }: { portal: PortalState }) {
   const { headerRight } = usePortalHeader();
+  const { closePortal } = usePortalStore();
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
   // Update date/time every second for countdown portal
@@ -62,6 +65,13 @@ function PortalHeader({ portal }: { portal: PortalState }) {
             {formatDateTime(currentDateTime)}
           </div>
         )}
+        <button
+          onClick={() => closePortal(portal.type)}
+          className="p-1.5 rounded-lg hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+          aria-label="Close portal"
+        >
+          <X size={16} />
+        </button>
       </div>
     </div>
   );
