@@ -23,10 +23,10 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative">
       {/* Background Effects */}
-      <div className="fixed inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] -z-10"></div>
+      <div className="fixed inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] pointer-events-none"></div>
       
       {/* Portal Container */}
-      <div className="relative w-full min-h-screen">
+      <div className="relative w-full min-h-screen z-10">
         <PortalManager />
       </div>
     </main>
