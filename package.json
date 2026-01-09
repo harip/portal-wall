@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "export": "next export"
+    "export":  "export"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
