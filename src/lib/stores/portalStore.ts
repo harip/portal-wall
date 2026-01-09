@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { PortalState, PortalType } from '@/types/portal';
+import { getStorage, setStorage } from '@/lib/storage';
 
 interface PortalStore {
   portals: PortalState[];
@@ -8,24 +9,30 @@ interface PortalStore {
   setHydrated: () => void;
 }
 
-const STORAGE_KEY = 'portal-wall-portals';
-
 const loadPortalsFromStorage = (): PortalState[] => {
-  if (typeof window === 'undefined') return [];
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    try {
-      return JSON.parse(stored);
-    } catch {
-      return [];
-    }
-  }
-  return [];
+  const storage = getStorage();
+  return storage.portals.open.map((p, index) => ({
+    id: p.id,
+    type: p.type as PortalType,
+    title: p.title,
+    position: { x: 0, y: 0 },
+    size: { width: 0, height: 0 },
+    zIndex: index + 1,
+    minimized: false,
+    isOpen: true,
+  }));
 };
 
 const savePortalsToStorage = (portals: PortalState[]) => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(portals));
+  const storage = getStorage();
+  storage.portals = {
+    open: portals.map(p => ({
+      id: p.id,
+      type: p.type,
+      title: p.title,
+    })),
+  };
+  setStorage(storage);
 };
 
 export const usePortalStore = create<PortalStore>((set, get) => ({

@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { WeatherData, HourlyForecast, DailyForecast, SavedLocation } from './types';
+import { getPortalData, setPortalData } from '@/lib/storage';
+import { getCurrentWeather, getHourlyForecast, formatTime } from './api';
 
 interface WeatherStore {
   currentWeather: WeatherData | null;
@@ -9,80 +11,198 @@ interface WeatherStore {
   activeLocationId: string;
   temperatureUnit: 'F' | 'C';
   loading: boolean;
+  error: string | null;
+  hydrated: boolean;
   
-  setCurrentWeather: (weather: WeatherData) => void;
-  setHourlyForecast: (forecast: HourlyForecast[]) => void;
-  setDailyForecast: (forecast: DailyForecast[]) => void;
+  setHydrated: () => void;
   addLocation: (location: SavedLocation) => void;
   removeLocation: (id: string) => void;
   setActiveLocation: (id: string) => void;
   toggleTemperatureUnit: () => void;
-  setLoading: (loading: boolean) => void;
+  fetchWeatherForLocation: (locationId: string) => Promise<void>;
 }
 
-// Mock data generator
-const generateMockWeather = (): WeatherData => ({
-  location: 'San Francisco, CA',
-  temp: 72,
-  condition: 'Partly Cloudy',
-  humidity: 65,
-  windSpeed: 12,
-  visibility: 10,
-  high: 75,
-  low: 62,
-  feelsLike: 71,
-  uvIndex: 6,
-  pressure: 30.1,
-  sunrise: '6:45 AM',
-  sunset: '7:30 PM',
-});
+// Default location
+const defaultLocation: SavedLocation = {
+  id: '1',
+  city: 'San Francisco',
+  country: 'US',
+  lat: 37.7749,
+  lon: -122.4194,
+  isFavorite: true,
+};
 
-const generateMockHourly = (): HourlyForecast[] => [
-  { time: '12 PM', temp: 70, condition: 'sunny', precipitation: 0 },
-  { time: '1 PM', temp: 71, condition: 'sunny', precipitation: 0 },
-  { time: '2 PM', temp: 72, condition: 'cloudy', precipitation: 5 },
-  { time: '3 PM', temp: 73, condition: 'cloudy', precipitation: 10 },
-  { time: '4 PM', temp: 72, condition: 'cloudy', precipitation: 15 },
-  { time: '5 PM', temp: 70, condition: 'rainy', precipitation: 40 },
-  { time: '6 PM', temp: 68, condition: 'rainy', precipitation: 60 },
-  { time: '7 PM', temp: 66, condition: 'cloudy', precipitation: 20 },
-];
+// Save to localStorage
+const saveWeatherSettings = (locations: SavedLocation[], activeId: string, unit: 'F' | 'C') => {
+  setPortalData('weather', {
+    locations: locations.map(({ id, city, country, state, lat, lon }) => ({ 
+      id, city, country, state, lat, lon 
+    })),
+    activeLocationId: activeId,
+    unit,
+  });
+};
 
-const generateMockDaily = (): DailyForecast[] => [
-  { day: 'Monday', date: 'Jan 9', high: 75, low: 62, condition: 'sunny', precipitation: 0, humidity: 65 },
-  { day: 'Tuesday', date: 'Jan 10', high: 73, low: 61, condition: 'cloudy', precipitation: 10, humidity: 70 },
-  { day: 'Wednesday', date: 'Jan 11', high: 70, low: 59, condition: 'rainy', precipitation: 80, humidity: 85 },
-  { day: 'Thursday', date: 'Jan 12', high: 72, low: 60, condition: 'sunny', precipitation: 5, humidity: 60 },
-  { day: 'Friday', date: 'Jan 13', high: 74, low: 63, condition: 'cloudy', precipitation: 15, humidity: 68 },
-  { day: 'Saturday', date: 'Jan 14', high: 76, low: 64, condition: 'sunny', precipitation: 0, humidity: 55 },
-  { day: 'Sunday', date: 'Jan 15', high: 77, low: 65, condition: 'sunny', precipitation: 0, humidity: 58 },
-];
-
-export const useWeatherStore = create<WeatherStore>((set) => ({
-  currentWeather: generateMockWeather(),
-  hourlyForecast: generateMockHourly(),
-  dailyForecast: generateMockDaily(),
-  savedLocations: [
-    { id: '1', city: 'San Francisco', country: 'USA', isFavorite: true },
-    { id: '2', city: 'New York', country: 'USA', isFavorite: false },
-    { id: '3', city: 'London', country: 'UK', isFavorite: false },
-  ],
+export const useWeatherStore = create<WeatherStore>((set, get) => ({
+  currentWeather: null,
+  hourlyForecast: [],
+  dailyForecast: [],
+  savedLocations: [defaultLocation],
   activeLocationId: '1',
   temperatureUnit: 'F',
   loading: false,
+  error: null,
+  hydrated: false,
 
-  setCurrentWeather: (weather) => set({ currentWeather: weather }),
-  setHourlyForecast: (forecast) => set({ hourlyForecast: forecast }),
-  setDailyForecast: (forecast) => set({ dailyForecast: forecast }),
-  addLocation: (location) => set((state) => ({ 
-    savedLocations: [...state.savedLocations, location] 
-  })),
-  removeLocation: (id) => set((state) => ({ 
-    savedLocations: state.savedLocations.filter(l => l.id !== id) 
-  })),
-  setActiveLocation: (id) => set({ activeLocationId: id }),
-  toggleTemperatureUnit: () => set((state) => ({ 
-    temperatureUnit: state.temperatureUnit === 'F' ? 'C' : 'F' 
-  })),
-  setLoading: (loading) => set({ loading }),
+  setHydrated: () => {
+    const stored = getPortalData<{
+      locations: Array<{ id: string; city: string; country: string; state?: string; lat?: number; lon?: number }>;
+      activeLocationId: string;
+      unit: 'F' | 'C';
+    }>('weather');
+
+    // Check if stored data has valid locations with lat/lon
+    const hasValidLocations = stored && 
+      stored.locations.length > 0 && 
+      stored.locations.every(loc => typeof loc.lat === 'number' && typeof loc.lon === 'number');
+
+    if (hasValidLocations) {
+      const locations = stored.locations.map(loc => ({
+        ...loc,
+        lat: loc.lat!,
+        lon: loc.lon!,
+        isFavorite: loc.id === stored.activeLocationId,
+      }));
+      set({
+        savedLocations: locations,
+        activeLocationId: stored.activeLocationId,
+        temperatureUnit: stored.unit,
+        hydrated: true,
+      });
+      
+      // Fetch weather for active location
+      get().fetchWeatherForLocation(stored.activeLocationId);
+    } else {
+      // First time or invalid data - use defaults and clear old data
+      set({
+        savedLocations: [defaultLocation],
+        activeLocationId: '1',
+        temperatureUnit: 'F',
+        hydrated: true,
+      });
+      saveWeatherSettings([defaultLocation], '1', 'F');
+      get().fetchWeatherForLocation('1');
+    }
+  },
+  
+  addLocation: (location) => {
+    const newLocations = [...get().savedLocations, location];
+    set({ savedLocations: newLocations });
+    saveWeatherSettings(newLocations, get().activeLocationId, get().temperatureUnit);
+  },
+  
+  removeLocation: (id) => {
+    const newLocations = get().savedLocations.filter(l => l.id !== id);
+    let newActiveId = get().activeLocationId;
+    
+    // If removing active location, switch to first available
+    if (id === newActiveId && newLocations.length > 0) {
+      newActiveId = newLocations[0].id;
+      get().fetchWeatherForLocation(newActiveId);
+    }
+    
+    set({ 
+      savedLocations: newLocations,
+      activeLocationId: newActiveId,
+    });
+    saveWeatherSettings(newLocations, newActiveId, get().temperatureUnit);
+  },
+  
+  setActiveLocation: (id) => {
+    set({ activeLocationId: id });
+    saveWeatherSettings(get().savedLocations, id, get().temperatureUnit);
+    get().fetchWeatherForLocation(id);
+  },
+  
+  toggleTemperatureUnit: () => {
+    const newUnit = get().temperatureUnit === 'F' ? 'C' : 'F';
+    set({ temperatureUnit: newUnit });
+    saveWeatherSettings(get().savedLocations, get().activeLocationId, newUnit);
+    // Refetch with new unit
+    get().fetchWeatherForLocation(get().activeLocationId);
+  },
+
+  fetchWeatherForLocation: async (locationId: string) => {
+    const location = get().savedLocations.find(l => l.id === locationId);
+    if (!location) return;
+    
+    set({ loading: true, error: null });
+    
+    try {
+      const unit = get().temperatureUnit;
+      
+      // Fetch current weather
+      const currentData = await getCurrentWeather(location.lat, location.lon, unit);
+      
+      // Fetch hourly forecast
+      const forecastData = await getHourlyForecast(location.lat, location.lon, unit);
+      
+      // Transform current weather
+      const currentWeather: WeatherData = {
+        location: `${location.city}, ${location.country}`,
+        temp: Math.round(currentData.main.temp),
+        condition: currentData.weather[0].description,
+        humidity: currentData.main.humidity,
+        windSpeed: Math.round(currentData.wind.speed),
+        visibility: Math.round(currentData.visibility / 1609), // meters to miles
+        high: Math.round(currentData.main.temp_max),
+        low: Math.round(currentData.main.temp_min),
+        feelsLike: Math.round(currentData.main.feels_like),
+        uvIndex: 0, // Not available in free tier
+        pressure: Math.round(currentData.main.pressure * 0.02953), // hPa to inHg
+        sunrise: formatTime(currentData.sys.sunrise),
+        sunset: formatTime(currentData.sys.sunset),
+      };
+      
+      // Transform hourly forecast (next 8 hours)
+      const hourlyForecast: HourlyForecast[] = forecastData.list.slice(0, 8).map((item: any) => ({
+        time: new Date(item.dt * 1000).toLocaleTimeString('en-US', { 
+          hour: 'numeric',
+          hour12: true 
+        }),
+        temp: Math.round(item.main.temp),
+        condition: item.weather[0].main.toLowerCase(),
+        precipitation: item.pop ? Math.round(item.pop * 100) : 0,
+      }));
+      
+      // Transform daily forecast (next 7 days)
+      const dailyData = forecastData.list.filter((_: any, index: number) => index % 8 === 0).slice(0, 7);
+      const dailyForecast: DailyForecast[] = dailyData.map((item: any) => {
+        const date = new Date(item.dt * 1000);
+        return {
+          day: date.toLocaleDateString('en-US', { weekday: 'long' }),
+          date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          high: Math.round(item.main.temp_max),
+          low: Math.round(item.main.temp_min),
+          condition: item.weather[0].main.toLowerCase(),
+          precipitation: item.pop ? Math.round(item.pop * 100) : 0,
+          humidity: item.main.humidity,
+        };
+      });
+      
+      set({
+        currentWeather,
+        hourlyForecast,
+        dailyForecast,
+        loading: false,
+      });
+      
+    } catch (error) {
+      console.error('Error fetching weather:', error);
+      set({ 
+        error: 'Failed to fetch weather data. Please check your API key.',
+        loading: false 
+      });
+    }
+  },
 }));

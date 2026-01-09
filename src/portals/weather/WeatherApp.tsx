@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
-import { CloudSun, Clock, Calendar, MapPin, Settings as SettingsIcon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { CloudSun, Clock, Calendar, MapPin } from 'lucide-react';
 import CurrentWeather from './pages/CurrentWeather';
 import HourlyForecast from './pages/HourlyForecast';
 import WeeklyForecast from './pages/WeeklyForecast';
 import Locations from './pages/Locations';
-import Settings from './pages/Settings';
+import { useWeatherStore } from './store';
 
-type TabType = 'current' | 'hourly' | 'weekly' | 'locations' | 'settings';
+type TabType = 'current' | 'hourly' | 'weekly' | 'locations';
 
 interface Tab {
   id: TabType;
@@ -21,11 +21,17 @@ const tabs: Tab[] = [
   { id: 'hourly', label: 'Hourly', icon: <Clock size={14} /> },
   { id: 'weekly', label: 'Weekly', icon: <Calendar size={14} /> },
   { id: 'locations', label: 'Locations', icon: <MapPin size={14} /> },
-  { id: 'settings', label: 'Settings', icon: <SettingsIcon size={14} /> },
 ];
 
 export default function WeatherApp() {
   const [activeTab, setActiveTab] = useState<TabType>('current');
+  const { setHydrated, hydrated } = useWeatherStore();
+
+  useEffect(() => {
+    if (!hydrated) {
+      setHydrated();
+    }
+  }, [hydrated, setHydrated]);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -37,8 +43,6 @@ export default function WeatherApp() {
         return <WeeklyForecast />;
       case 'locations':
         return <Locations />;
-      case 'settings':
-        return <Settings />;
       default:
         return <CurrentWeather />;
     }

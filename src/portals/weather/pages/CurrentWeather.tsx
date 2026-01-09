@@ -1,11 +1,35 @@
 'use client';
 
 import React from 'react';
-import { Cloud, Sun, CloudRain, Wind, Droplets, Eye, Gauge, Sunrise, Sunset, Thermometer } from 'lucide-react';
+import { Cloud, Sun, CloudRain, Wind, Droplets, Eye, Gauge, Sunrise, Sunset, Thermometer, AlertCircle } from 'lucide-react';
 import { useWeatherStore } from '../store';
 
 export default function CurrentWeather() {
-  const { currentWeather, temperatureUnit } = useWeatherStore();
+  const { currentWeather, temperatureUnit, loading, error } = useWeatherStore();
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-3">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/50"></div>
+        <p className="text-white/60 text-sm">Loading weather data...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-3 p-6 text-center">
+        <AlertCircle size={48} className="text-red-400" />
+        <div>
+          <p className="text-white font-medium mb-2">Unable to fetch weather</p>
+          <p className="text-white/60 text-sm">{error}</p>
+          <p className="text-white/40 text-xs mt-3">
+            Note: New API keys can take 10-15 minutes to activate
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!currentWeather) {
     return (

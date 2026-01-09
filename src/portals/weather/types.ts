@@ -35,5 +35,8 @@ export interface SavedLocation {
   id: string;
   city: string;
   country: string;
-  isFavorite: boolean;
+  state?: string;
+  lat: number;
+  lon: number;
+  isFavorite?: boolean;
 }
