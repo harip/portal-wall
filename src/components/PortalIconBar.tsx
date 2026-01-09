@@ -52,7 +52,7 @@ export default function PortalIconBar() {
   };
 
   return (
-    <div className="flex justify-center gap-4 mt-6">
+    <div className="flex justify-center gap-3 mt-6">
       {portalIcons.map((portalIcon) => {
         const isOpen = isPortalOpen(portalIcon.type);
         const isTop = isPortalOnTop(portalIcon.type);
@@ -61,43 +61,29 @@ export default function PortalIconBar() {
           <motion.button
             key={portalIcon.type}
             onClick={() => handleIconClick(portalIcon)}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.15 }}
+            whileTap={{ scale: 0.9 }}
             className={`
-              relative flex flex-col items-center gap-2 p-4 rounded-2xl
-              backdrop-blur-xl border transition-all duration-300
+              relative flex items-center justify-center rounded-full
+              transition-all duration-300
               ${
-                isOpen
-                  ? isTop
-                    ? 'bg-white/20 border-white/40 shadow-xl'
-                    : 'bg-white/10 border-white/20 shadow-lg'
-                  : 'bg-white/5 border-white/10 shadow-md hover:bg-white/10'
+                isOpen && isTop
+                  ? 'shadow-2xl shadow-purple-500/50'
+                  : isOpen
+                  ? 'shadow-lg shadow-purple-500/30'
+                  : 'shadow-md hover:shadow-lg hover:shadow-purple-500/20'
               }
             `}
             aria-label={`${isOpen ? 'Focus' : 'Open'} ${portalIcon.label}`}
           >
             {/* Icon */}
             <div className={`
-              text-4xl w-16 h-16 flex items-center justify-center rounded-xl
+              text-3xl w-12 h-12 flex items-center justify-center rounded-full
               bg-gradient-to-br ${portalIcon.gradient}
-              ${isOpen && isTop ? 'shadow-lg' : ''}
+              ${isOpen && isTop ? 'ring-2 ring-white/40' : ''}
             `}>
               {portalIcon.icon}
             </div>
-
-            {/* Label */}
-            <span className="text-white/90 text-xs font-medium">
-              {portalIcon.label}
-            </span>
-
-            {/* Active indicator */}
-            {isOpen && isTop && (
-              <motion.div
-                layoutId="active-portal"
-                className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400"
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              />
-            )}
           </motion.button>
         );
       })}
