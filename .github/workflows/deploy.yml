@@ -11,7 +11,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,16 +21,15 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Build Next.js
+      - name: Build (static export via next.config.js)
         run: npm run build
-
-      - name: Export static site
-        run: npx next export
+        # With output:'export', Next writes the static site to ./out
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./out
+          # This action also creates `.nojekyll` so Jekyll won't interfere
