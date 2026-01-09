@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import PortalManager from '@/components/portal/PortalManager';
 import GridLights from '@/components/GridLights';
+import PortalIconBar from '@/components/PortalIconBar';
 import { usePortalStore } from '@/lib/stores/portalStore';
 
 export default function Home() {
@@ -28,6 +29,19 @@ export default function Home() {
       
       {/* Animated Grid Lights */}
       <GridLights />
+      
+      {/* Header */}
+      <div className="relative z-20 pt-8 pb-4 px-8">
+        <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-center">
+          Portal Wall
+        </h1>
+        <p className="text-center text-slate-300 mt-2 text-sm">
+          Your personal dashboard
+        </p>
+        
+        {/* Portal Icon Bar */}
+        <PortalIconBar />
+      </div>
       
       {/* Portal Container */}
       <div className="relative w-full min-h-screen z-10">

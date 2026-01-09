@@ -5,6 +5,7 @@ import { getStorage, setStorage } from '@/lib/storage';
 interface PortalStore {
   portals: PortalState[];
   openPortal: (type: PortalType, title: string) => void;
+  bringToFront: (type: PortalType) => void;
   hydrated: boolean;
   setHydrated: () => void;
 }
@@ -62,6 +63,25 @@ export const usePortalStore = create<PortalStore>((set, get) => ({
     };
 
     const newPortals = [...get().portals, newPortal];
+    set({ portals: newPortals });
+    savePortalsToStorage(newPortals);
+  },
+
+  bringToFront: (type: PortalType) => {
+    const portals = get().portals;
+    const portalIndex = portals.findIndex((p) => p.type === type);
+    
+    if (portalIndex === -1 || portalIndex === 0) {
+      return; // Portal doesn't exist or already at front
+    }
+
+    // Move the portal to the beginning of the array (front/top)
+    const newPortals = [
+      portals[portalIndex],
+      ...portals.slice(0, portalIndex),
+      ...portals.slice(portalIndex + 1),
+    ];
+
     set({ portals: newPortals });
     savePortalsToStorage(newPortals);
   },
