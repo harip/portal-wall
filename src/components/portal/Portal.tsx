@@ -11,10 +11,7 @@ interface PortalProps {
 
 export default function Portal({ portal, children }: PortalProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3 }}
+    <div
       className="h-full w-full bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 overflow-hidden flex flex-col"
     >
       {/* Card Header */}
@@ -26,6 +23,6 @@ export default function Portal({ portal, children }: PortalProps) {
       <div className="flex-1 overflow-auto">
         {children}
       </div>
-    </motion.div>
+    </div>
   );
 }
