@@ -10,9 +10,13 @@ export default function PortalManager() {
   const { portals } = usePortalStore();
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6 h-full">
+    <div className="flex flex-wrap gap-6 p-6">
       {portals.map((portal) => (
-        <div key={portal.id} className="min-h-[400px]">
+        <div 
+          key={portal.id} 
+          className="w-full sm:w-[400px]"
+          style={{ height: getPortalHeight(portal.type) }}
+        >
           <Portal portal={portal}>
             {portal.type === 'weather' && <WeatherApp />}
             {portal.type === 'clock' && <ClockApp />}
@@ -21,4 +25,15 @@ export default function PortalManager() {
       ))}
     </div>
   );
+}
+
+function getPortalHeight(type: string): string {
+  switch (type) {
+    case 'weather':
+      return '600px';
+    case 'clock':
+      return '280px';
+    default:
+      return '400px';
+  }
 }
