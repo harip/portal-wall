@@ -25,12 +25,6 @@ const portalIcons: PortalIcon[] = [
     label: 'Clock',
     gradient: 'from-purple-400 to-pink-400',
   },
-  {
-    type: 'cricket',
-    icon: '🏏',
-    label: 'Cricket',
-    gradient: 'from-green-400 to-emerald-400',
-  },
 ];
 
 export default function PortalIconBar() {

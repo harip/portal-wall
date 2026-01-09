@@ -19,7 +19,6 @@ export default function Home() {
     if (hydrated && portals.length === 0) {
       openPortal('weather', 'Weather');
       openPortal('clock', 'Clock');
-      openPortal('cricket', 'Cricket');
     }
   }, [hydrated, portals.length, openPortal]);
 
