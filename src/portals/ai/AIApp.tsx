@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { ExternalLink, RefreshCw, RotateCw } from 'lucide-react';
+import { ExternalLink, RotateCw, Bot, CircuitBoard } from 'lucide-react';
 import { usePortalHeader } from '@/components/portal/PortalHeaderContext';
 
 interface NewsItem {
@@ -13,40 +13,58 @@ interface NewsItem {
     score: number;
 }
 
-export default function NewsApp() {
+const AI_KEYWORDS = [
+    'AI', 'Artificial Intelligence', 'LLM', 'GPT', 'ChatGPT', 'OpenAI', 'Anthropic',
+    'DeepMind', 'Nvidia', 'GPU', 'Transformer', 'Neural', 'Machine Learning', 'ML',
+    'Deep Learning', 'Generative', 'Stable Diffusion', 'Midjourney', 'Llama', 'Mistral',
+    'Insurance' // Added per specific request
+];
+
+export default function AIApp() {
     const [news, setNews] = useState<NewsItem[]>([]);
     const [loading, setLoading] = useState(true);
-
     const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
     const { setHeaderRight } = usePortalHeader();
 
-    const fetchNews = useCallback(async () => {
+    const fetchAINews = useCallback(async () => {
         setLoading(true);
         try {
+            // Fetch top 100 stories to ensure we find enough AI related content
             const topStoriesRes = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty');
             const topStoriesIds = await topStoriesRes.json();
-            const top10Ids = topStoriesIds.slice(0, 20);
+            const candidateIds = topStoriesIds.slice(0, 100);
 
-            const newsPromises = top10Ids.map((id: number) =>
+            const storyPromises = candidateIds.map((id: number) =>
                 fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`).then((res) => res.json())
             );
 
-            const newsItems = await Promise.all(newsPromises);
-            setNews(newsItems);
+            const stories = await Promise.all(storyPromises);
+
+            // Filter for AI keywords in title
+            const aiStories = stories.filter((story: any) => {
+                if (!story || !story.title) return false;
+                const title = story.title.toLowerCase();
+                return AI_KEYWORDS.some(keyword => {
+                    // Simple word boundary check or just raw includes
+                    return title.includes(keyword.toLowerCase());
+                });
+            }).slice(0, 20); // Keep top 20
+
+            setNews(aiStories);
             setLastUpdated(new Date());
         } catch (error) {
-            console.error('Error fetching news:', error);
+            console.error('Error fetching AI news:', error);
         } finally {
             setLoading(false);
         }
     }, []);
 
     useEffect(() => {
-        fetchNews();
+        fetchAINews();
         // Auto-refresh every 5 minutes
-        const interval = setInterval(fetchNews, 300000);
+        const interval = setInterval(fetchAINews, 300000);
         return () => clearInterval(interval);
-    }, [fetchNews]);
+    }, [fetchAINews]);
 
     // Update Header Right content
     useEffect(() => {
@@ -56,10 +74,10 @@ export default function NewsApp() {
                     Updated: {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                 </span>
                 <button
-                    onClick={fetchNews}
+                    onClick={fetchAINews}
                     disabled={loading}
                     className="p-1.5 hover:bg-white/10 rounded-lg text-white/60 hover:text-white transition-colors"
-                    title="Refresh News"
+                    title="Refresh AI Feed"
                 >
                     <RotateCw size={14} className={loading ? 'animate-spin' : ''} />
                 </button>
@@ -68,7 +86,7 @@ export default function NewsApp() {
 
         // Cleanup on unmount
         return () => setHeaderRight(null);
-    }, [setHeaderRight, lastUpdated, loading, fetchNews]);
+    }, [setHeaderRight, lastUpdated, loading, fetchAINews]);
 
     return (
         <div className="h-full flex flex-col bg-slate-900/50 text-white">
@@ -82,28 +100,42 @@ export default function NewsApp() {
                             </div>
                         ))}
                     </div>
+                ) : news.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full text-white/40">
+                        <Bot size={48} className="mb-4 opacity-50" />
+                        <p className="text-sm">No trending AI news found right now.</p>
+                        <p className="text-xs mt-1">Try refreshing later.</p>
+                    </div>
                 ) : (
                     news.map((item) => (
-                        <div key={item.id} className="p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors border border-white/5">
+                        <div key={item.id} className="p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors border border-white/5 group">
                             <a
                                 href={item.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="font-medium text-slate-200 hover:text-blue-400 visited:text-slate-400 block mb-1"
+                                className="font-medium text-slate-200 hover:text-cyan-400 visited:text-slate-400 block mb-1"
                             >
                                 {item.title}
                             </a>
                             <div className="flex items-center gap-3 text-xs text-slate-500">
-                                <span>{item.score} points</span>
+                                <span className="flex items-center gap-1">
+                                    <Bot size={12} className="text-cyan-500/70" />
+                                    {item.score}
+                                </span>
                                 <span>by {item.by}</span>
                                 <span className="flex items-center gap-1">
                                     <ExternalLink size={10} />
-                                    {new URL(item.url || 'https://news.ycombinator.com').hostname.replace('www.', '')}
+                                    {item.url ? new URL(item.url).hostname.replace('www.', '') : 'news.ycombinator.com'}
                                 </span>
                             </div>
                         </div>
                     ))
                 )}
+            </div>
+
+            <div className="p-3 bg-slate-900/80 text-center text-[10px] text-slate-600 border-t border-white/5 flex items-center justify-center gap-2">
+                <CircuitBoard size={12} />
+                <span>Curated from Hacker News</span>
             </div>
         </div>
     );

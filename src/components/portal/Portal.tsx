@@ -23,6 +23,7 @@ const portalHeaderIcons: Record<PortalType, string> = {
   news: '📰',
   radio: '📻',
   crypto: '📈',
+  ai: '🤖',
 };
 
 function PortalHeader({ portal }: { portal: PortalState }) {

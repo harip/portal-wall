@@ -13,6 +13,7 @@ import PasswordGeneratorApp from '@/portals/passwordgen/PasswordGeneratorApp';
 import NewsApp from '@/portals/news/NewsApp';
 import RadioApp from '@/portals/radio/RadioApp';
 import CryptoApp from '@/portals/crypto/CryptoApp';
+import AIApp from '@/portals/ai/AIApp';
 import { motion, AnimatePresence } from 'framer-motion';
 import { portalAnimations, portalTransition } from '@/lib/animations';
 
@@ -53,6 +54,7 @@ export default function PortalManager() {
                 {activePortal.type === 'news' && <NewsApp />}
                 {activePortal.type === 'radio' && <RadioApp />}
                 {activePortal.type === 'crypto' && <CryptoApp />}
+                {activePortal.type === 'ai' && <AIApp />}
               </Portal>
             </motion.div>
           </AnimatePresence>
@@ -76,6 +78,7 @@ export default function PortalManager() {
             {portal.type === 'news' && <NewsApp />}
             {portal.type === 'radio' && <RadioApp />}
             {portal.type === 'crypto' && <CryptoApp />}
+            {portal.type === 'ai' && <AIApp />}
           </Portal>
         </div>
       ))}

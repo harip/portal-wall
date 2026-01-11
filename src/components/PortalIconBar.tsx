@@ -73,6 +73,12 @@ const portalIcons: PortalIcon[] = [
     label: 'Crypto',
     gradient: 'from-emerald-400 to-green-600',
   },
+  {
+    type: 'ai',
+    icon: '🤖',
+    label: 'AI Tech',
+    gradient: 'from-cyan-400 to-blue-500',
+  },
 ];
 
 export default function PortalIconBar() {
