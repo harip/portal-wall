@@ -79,6 +79,12 @@ const portalIcons: PortalIcon[] = [
     label: 'AI Tech',
     gradient: 'from-cyan-400 to-blue-500',
   },
+  {
+    type: 'voice',
+    icon: '🎙️',
+    label: 'Voice Memo',
+    gradient: 'from-red-500 to-orange-500',
+  },
 ];
 
 export default function PortalIconBar() {

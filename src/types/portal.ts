@@ -1,4 +1,4 @@
-export type PortalType = 'weather' | 'clock' | 'calendar' | 'countdown' | 'quicksave' | 'unitconverter' | 'passwordgen' | 'news' | 'radio' | 'crypto' | 'ai';
+export type PortalType = 'weather' | 'clock' | 'calendar' | 'countdown' | 'quicksave' | 'unitconverter' | 'passwordgen' | 'news' | 'radio' | 'crypto' | 'ai' | 'voice';
 
 export interface PortalState {
   id: string;
