@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, RefreshCcw, DollarSign, Trash2 } from 'lucide-react';
+import { TrendingUp, TrendingDown, RefreshCcw, DollarSign, Trash2, RotateCw } from 'lucide-react';
 import { useCryptoStore } from '../store';
 import { CryptoData } from '../types';
+import { usePortalHeader } from '@/components/portal/PortalHeaderContext';
 
 const MOCK_DATA: CryptoData[] = [
     { id: 'bitcoin', name: 'Bitcoin', symbol: 'btc', current_price: 64230, price_change_percentage_24h: 2.4, market_cap: 1200000000000, image: 'https://assets.coingecko.com/coins/images/1/small/bitcoin.png' },
@@ -46,13 +47,37 @@ export default function Watchlist() {
         }
     }, [hydrated, watchlist]);
 
+    const { setHeaderRight } = usePortalHeader();
+
     useEffect(() => {
         if (hydrated) {
             fetchPrices();
-            const interval = setInterval(fetchPrices, 60000);
+            const interval = setInterval(fetchPrices, 30000); // 30 seconds auto-fetch
             return () => clearInterval(interval);
         }
-    }, [hydrated, watchlist.length, fetchPrices]); // Re-fetch only when list size changes or hydrated
+    }, [hydrated, watchlist.length, fetchPrices]);
+
+    // Update Header Right content
+    useEffect(() => {
+        setHeaderRight(
+            <div className="flex items-center gap-3">
+                <span className="text-[10px] text-white/40 font-mono hidden sm:inline-block">
+                    Updated: {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                </span>
+                <button
+                    onClick={fetchPrices}
+                    disabled={loading}
+                    className="p-1.5 hover:bg-white/10 rounded-lg text-white/60 hover:text-white transition-colors"
+                    title="Refresh Prices"
+                >
+                    <RotateCw size={14} className={loading ? 'animate-spin' : ''} />
+                </button>
+            </div>
+        );
+
+        // Cleanup on unmount
+        return () => setHeaderRight(null);
+    }, [setHeaderRight, lastUpdated, loading, fetchPrices]);
 
     if (!hydrated) return null;
 
