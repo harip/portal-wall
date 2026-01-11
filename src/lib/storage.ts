@@ -66,6 +66,17 @@ export interface PortalWallStorage {
     }>;
     favorites: string[];
   };
+  news?: {
+    readHistory: number[];
+    bookmarks: number[];
+  };
+  radio?: {
+    lastStationId: string;
+    volume: number;
+  };
+  stocks?: {
+    watchlist: string[];
+  };
   // Future portals can add their own sections here
 }
 
@@ -74,7 +85,7 @@ export function getStorage(): PortalWallStorage {
   if (typeof window === 'undefined') {
     return { portals: { open: [] } };
   }
-  
+
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
@@ -83,14 +94,14 @@ export function getStorage(): PortalWallStorage {
   } catch (error) {
     console.error('Error reading from localStorage:', error);
   }
-  
+
   return { portals: { open: [] } };
 }
 
 // Save all data
 export function setStorage(data: PortalWallStorage): void {
   if (typeof window === 'undefined') return;
-  
+
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch (error) {

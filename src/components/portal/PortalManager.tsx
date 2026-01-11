@@ -10,6 +10,9 @@ import CountdownApp from '@/portals/countdown/CountdownApp';
 import QuickSaveApp from '@/portals/quicksave/QuickSaveApp';
 import UnitConverterApp from '@/portals/unitconverter/UnitConverterApp';
 import PasswordGeneratorApp from '@/portals/passwordgen/PasswordGeneratorApp';
+import NewsApp from '@/portals/news/NewsApp';
+import RadioApp from '@/portals/radio/RadioApp';
+import StocksApp from '@/portals/stocks/StocksApp';
 import { motion, AnimatePresence } from 'framer-motion';
 import { portalAnimations, portalTransition } from '@/lib/animations';
 
@@ -47,15 +50,18 @@ export default function PortalManager() {
                 {activePortal.type === 'quicksave' && <QuickSaveApp />}
                 {activePortal.type === 'unitconverter' && <UnitConverterApp />}
                 {activePortal.type === 'passwordgen' && <PasswordGeneratorApp />}
+                {activePortal.type === 'news' && <NewsApp />}
+                {activePortal.type === 'radio' && <RadioApp />}
+                {activePortal.type === 'stocks' && <StocksApp />}
               </Portal>
             </motion.div>
           </AnimatePresence>
         </div>
       )}
-      
+
       {/* Show remaining portals */}
       {remainingPortals.map((portal) => (
-        <div 
+        <div
           key={portal.id}
           className="w-full sm:w-[600px] h-[600px] flex-shrink-0"
         >
@@ -67,6 +73,9 @@ export default function PortalManager() {
             {portal.type === 'quicksave' && <QuickSaveApp />}
             {portal.type === 'unitconverter' && <UnitConverterApp />}
             {portal.type === 'passwordgen' && <PasswordGeneratorApp />}
+            {portal.type === 'news' && <NewsApp />}
+            {portal.type === 'radio' && <RadioApp />}
+            {portal.type === 'stocks' && <StocksApp />}
           </Portal>
         </div>
       ))}

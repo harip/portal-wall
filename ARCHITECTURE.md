@@ -166,6 +166,37 @@ Update `src/components/portal/WindowManager.tsx` to render your app when window 
 
 Add a button/icon to open the new window in the portal shell.
 
+## UI/UX Design System
+ 
+### Core Philosophy: Minimalist Glassmorphism
+ 
+The UI is built on a "Glass OS" metaphor—clean, translucent layers that feel like a unified operating system, not just a website.
+ 
+### Strict Design Rules for Portals
+ 
+1.  **No Redundant Headers**:
+    *   The window frame *is* the header. Do not repeat titles like "My Weather" or "Crypto Tracker" inside the content area.
+    *   Use the window title bar for the app name.
+ 
+2.  **Navigation as Tabs**:
+    *   Use a slim, translucent tab bar at the top for sub-views (e.g., Current vs. Daily).
+    *   Active tabs use a subtle white/20 overlay; inactive tabs are white/60 text.
+    *   **No dividers**: Avoid harsh borders between the tab bar and content.
+ 
+3.  **Color Palette**:
+    *   **Backgrounds**: `bg-slate-900/90` or `bg-gradient-to-br` for depth.
+    *   **Text**: `text-white` (Primary), `text-white/60` (Secondary), `text-white/40` (Tertiary).
+    *   **Accents**: Use semantic colors sparingly (e.g., Green for gains, Red for losses).
+ 
+4.  **Typography & Spacing**:
+    *   Use `flex` and `gap` for layout. Avoid heavy margins.
+    *   Font size: `text-sm` is the default content size. `text-xs` for metadata.
+    *   Roundness: `rounded-xl` for cards, `rounded-lg` for buttons.
+ 
+5.  **Interactions**:
+    *   Hover effects should be subtle (`hover:bg-white/10`).
+    *   Transitions: `transition-colors duration-200`.
+
 ## Design Principles
 
 1. **Isolation**: Each window app should be self-contained

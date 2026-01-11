@@ -55,6 +55,24 @@ const portalIcons: PortalIcon[] = [
     label: 'Password Generator',
     gradient: 'from-amber-400 to-orange-400',
   },
+  {
+    type: 'news',
+    icon: '📰',
+    label: 'News Feed',
+    gradient: 'from-orange-500 to-red-500',
+  },
+  {
+    type: 'radio',
+    icon: '📻',
+    label: 'Radio',
+    gradient: 'from-pink-500 to-rose-500',
+  },
+  {
+    type: 'stocks',
+    icon: '📈',
+    label: 'Crypto',
+    gradient: 'from-emerald-400 to-green-600',
+  },
 ];
 
 export default function PortalIconBar() {
@@ -62,7 +80,7 @@ export default function PortalIconBar() {
 
   const handleIconClick = (portalIcon: PortalIcon) => {
     const existingPortal = portals.find((p) => p.type === portalIcon.type);
-    
+
     if (existingPortal) {
       // Portal exists, bring it to front
       bringToFront(portalIcon.type);
@@ -99,10 +117,9 @@ export default function PortalIconBar() {
             className={`
               relative flex items-center justify-center rounded-full
               transition-all duration-300
-              ${
-                isOpen && isTop
-                  ? 'shadow-2xl shadow-purple-500/50'
-                  : isOpen
+              ${isOpen && isTop
+                ? 'shadow-2xl shadow-purple-500/50'
+                : isOpen
                   ? 'shadow-lg shadow-purple-500/30'
                   : 'shadow-md hover:shadow-lg hover:shadow-purple-500/20'
               }
