@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Search as SearchIcon, Plus, Check, Loader2, X } from 'lucide-react';
-import { useStocksStore } from '../store';
+import { useCryptoStore } from '../store';
 import { CryptoData } from '../types';
 
 interface SearchResult {
@@ -14,7 +14,7 @@ interface SearchResult {
 }
 
 export default function Search() {
-    const { watchlist, addToWatchlist, removeFromWatchlist } = useStocksStore();
+    const { watchlist, addToWatchlist, removeFromWatchlist } = useCryptoStore();
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<SearchResult[]>([]);
     const [loading, setLoading] = useState(false);

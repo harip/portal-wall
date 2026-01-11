@@ -20,6 +20,9 @@ const portalHeaderIcons: Record<PortalType, string> = {
   quicksave: '📌',
   unitconverter: '📏',
   passwordgen: '🔐',
+  news: '📰',
+  radio: '📻',
+  crypto: '📈',
 };
 
 function PortalHeader({ portal }: { portal: PortalState }) {
@@ -39,15 +42,15 @@ function PortalHeader({ portal }: { portal: PortalState }) {
   }, [portal.type]);
 
   const formatDateTime = (date: Date) => {
-    const dateStr = date.toLocaleDateString('en-US', { 
-      month: 'short', 
+    const dateStr = date.toLocaleDateString('en-US', {
+      month: 'short',
       day: 'numeric',
       year: 'numeric'
     });
-    const timeStr = date.toLocaleTimeString('en-US', { 
-      hour: 'numeric', 
+    const timeStr = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
       minute: '2-digit',
-      hour12: true 
+      hour12: true
     });
     return `${dateStr} ${timeStr}`;
   };

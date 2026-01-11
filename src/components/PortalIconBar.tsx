@@ -68,7 +68,7 @@ const portalIcons: PortalIcon[] = [
     gradient: 'from-pink-500 to-rose-500',
   },
   {
-    type: 'stocks',
+    type: 'crypto',
     icon: '📈',
     label: 'Crypto',
     gradient: 'from-emerald-400 to-green-600',

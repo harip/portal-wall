@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-import { useStocksStore } from './store';
+import { useCryptoStore } from './store';
 import { TrendingUp, Plus } from 'lucide-react';
 import Watchlist from './pages/Watchlist';
 import Search from './pages/Search';
 
 type TabType = 'watchlist' | 'search';
 
-export default function StocksApp() {
-    const { hydrated, setHydrated } = useStocksStore();
+export default function CryptoApp() {
+    const { hydrated, setHydrated } = useCryptoStore();
     const [activeTab, setActiveTab] = useState<TabType>('watchlist');
 
     useEffect(() => {

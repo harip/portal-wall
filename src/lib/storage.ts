@@ -74,7 +74,7 @@ export interface PortalWallStorage {
     lastStationId: string;
     volume: number;
   };
-  stocks?: {
+  crypto?: {
     watchlist: string[];
   };
   // Future portals can add their own sections here

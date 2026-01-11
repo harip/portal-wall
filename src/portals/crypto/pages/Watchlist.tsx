@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, RefreshCcw, DollarSign, Trash2 } from 'lucide-react';
-import { useStocksStore } from '../store';
+import { useCryptoStore } from '../store';
 import { CryptoData } from '../types';
 
 const MOCK_DATA: CryptoData[] = [
@@ -12,12 +12,12 @@ const MOCK_DATA: CryptoData[] = [
 ];
 
 export default function Watchlist() {
-    const { watchlist, hydrated, removeFromWatchlist } = useStocksStore();
+    const { watchlist, hydrated, removeFromWatchlist } = useCryptoStore();
     const [assets, setAssets] = useState<CryptoData[]>([]);
     const [loading, setLoading] = useState(false);
     const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
-    const fetchPrices = async () => {
+    const fetchPrices = React.useCallback(async () => {
         if (!hydrated || watchlist.length === 0) {
             setAssets([]);
             return;
@@ -44,7 +44,7 @@ export default function Watchlist() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [hydrated, watchlist]);
 
     useEffect(() => {
         if (hydrated) {
@@ -52,7 +52,7 @@ export default function Watchlist() {
             const interval = setInterval(fetchPrices, 60000);
             return () => clearInterval(interval);
         }
-    }, [hydrated, watchlist.length]); // Re-fetch only when list size changes or hydrated
+    }, [hydrated, watchlist.length, fetchPrices]); // Re-fetch only when list size changes or hydrated
 
     if (!hydrated) return null;
 

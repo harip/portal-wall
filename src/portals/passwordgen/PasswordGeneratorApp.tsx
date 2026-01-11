@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Key, Copy, RefreshCw, Check } from 'lucide-react';
 import { PasswordOptions, DEFAULT_OPTIONS, PasswordStrength } from './types';
 import { generatePassword, calculateStrength, getStrengthColor, getStrengthLabel } from './utils';
@@ -20,7 +20,7 @@ export default function PasswordGeneratorApp() {
 
   const handleCopy = async () => {
     if (!password) return;
-    
+
     try {
       await navigator.clipboard.writeText(password);
       setCopied(true);
@@ -41,8 +41,9 @@ export default function PasswordGeneratorApp() {
   };
 
   // Generate on mount
-  React.useEffect(() => {
+  useEffect(() => {
     handleGenerate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -83,12 +84,11 @@ export default function PasswordGeneratorApp() {
           </div>
           <div className="h-2 bg-white/10 rounded-full overflow-hidden">
             <div
-              className={`h-full transition-all ${
-                strength === 'weak' ? 'bg-red-500 w-1/4' :
+              className={`h-full transition-all ${strength === 'weak' ? 'bg-red-500 w-1/4' :
                 strength === 'medium' ? 'bg-yellow-500 w-1/2' :
-                strength === 'strong' ? 'bg-green-500 w-3/4' :
-                'bg-emerald-500 w-full'
-              }`}
+                  strength === 'strong' ? 'bg-green-500 w-3/4' :
+                    'bg-emerald-500 w-full'
+                }`}
             />
           </div>
         </div>
@@ -119,7 +119,7 @@ export default function PasswordGeneratorApp() {
         {/* Character Sets */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-white/90">Character Sets</label>
-          
+
           <label className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5 cursor-pointer">
             <input
               type="checkbox"

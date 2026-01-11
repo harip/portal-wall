@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { getPortalData, setPortalData } from '@/lib/storage';
 
-interface StocksStore {
+interface CryptoStore {
     watchlist: string[];
     hydrated: boolean;
     setHydrated: () => void;
@@ -13,15 +13,15 @@ interface StocksStore {
 const DEFAULT_WATCHLIST = ['bitcoin', 'ethereum', 'solana'];
 
 const saveStocksState = (watchlist: string[]) => {
-    setPortalData('stocks', { watchlist });
+    setPortalData('crypto', { watchlist });
 };
 
-export const useStocksStore = create<StocksStore>((set, get) => ({
+export const useCryptoStore = create<CryptoStore>((set, get) => ({
     watchlist: DEFAULT_WATCHLIST,
     hydrated: false,
 
     setHydrated: () => {
-        const stored = getPortalData<{ watchlist: string[] }>('stocks');
+        const stored = getPortalData<{ watchlist: string[] }>('crypto');
         set({
             watchlist: stored?.watchlist || DEFAULT_WATCHLIST,
             hydrated: true,
