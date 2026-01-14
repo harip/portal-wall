@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Portal from './Portal';
 import { usePortalStore } from '@/lib/stores/portalStore';
 import WeatherApp from '@/portals/weather/WeatherApp';
@@ -16,8 +17,6 @@ import CryptoApp from '@/portals/crypto/CryptoApp';
 import AIApp from '@/portals/ai/AIApp';
 import VoiceApp from '@/portals/voice/VoiceApp';
 import SettingsApp from '@/portals/settings/SettingsApp';
-
-import { useRef, useState, useEffect } from 'react';
 
 export default function PortalManager() {
   const { portals } = usePortalStore();
@@ -60,30 +59,41 @@ export default function PortalManager() {
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex flex-row overflow-x-auto sm:overflow-visible sm:flex-wrap sm:justify-center items-start gap-4 sm:gap-6 px-[7.5vw] sm:px-6 pt-2 pb-6 no-scrollbar snap-x snap-mandatory sm:snap-none w-full"
+        className="flex flex-row overflow-x-auto sm:overflow-visible sm:flex-wrap sm:justify-center items-start gap-4 sm:gap-8 px-[7.5vw] sm:px-12 pt-4 pb-12 no-scrollbar snap-x snap-mandatory sm:snap-none w-full"
       >
-        {portals.map((portal) => (
-          <div
-            key={portal.id}
-            className="w-[85vw] sm:w-[600px] h-[70vh] sm:h-[600px] flex-shrink-0 snap-center sm:snap-align-none"
-          >
-            <Portal portal={portal}>
-              {portal.type === 'weather' && <WeatherApp />}
-              {portal.type === 'clock' && <ClockApp />}
-              {portal.type === 'calendar' && <CalendarApp />}
-              {portal.type === 'countdown' && <CountdownApp />}
-              {portal.type === 'quicksave' && <QuickSaveApp />}
-              {portal.type === 'unitconverter' && <UnitConverterApp />}
-              {portal.type === 'passwordgen' && <PasswordGeneratorApp />}
-              {portal.type === 'news' && <NewsApp />}
-              {portal.type === 'radio' && <RadioApp />}
-              {portal.type === 'crypto' && <CryptoApp />}
-              {portal.type === 'ai' && <AIApp />}
-              {portal.type === 'voice' && <VoiceApp />}
-              {portal.type === 'settings' && <SettingsApp />}
-            </Portal>
-          </div>
-        ))}
+        <AnimatePresence mode="popLayout">
+          {portals.map((portal) => (
+            <motion.div
+              key={portal.id}
+              layout
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{
+                type: 'spring',
+                damping: 25,
+                stiffness: 120,
+              }}
+              className="w-[85vw] sm:w-[600px] h-[70vh] sm:h-[600px] flex-shrink-0 snap-center sm:snap-align-none"
+            >
+              <Portal portal={portal}>
+                {portal.type === 'weather' && <WeatherApp />}
+                {portal.type === 'clock' && <ClockApp />}
+                {portal.type === 'calendar' && <CalendarApp />}
+                {portal.type === 'countdown' && <CountdownApp />}
+                {portal.type === 'quicksave' && <QuickSaveApp />}
+                {portal.type === 'unitconverter' && <UnitConverterApp />}
+                {portal.type === 'passwordgen' && <PasswordGeneratorApp />}
+                {portal.type === 'news' && <NewsApp />}
+                {portal.type === 'radio' && <RadioApp />}
+                {portal.type === 'crypto' && <CryptoApp />}
+                {portal.type === 'ai' && <AIApp />}
+                {portal.type === 'voice' && <VoiceApp />}
+                {portal.type === 'settings' && <SettingsApp />}
+              </Portal>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
 
       {/* Pagination Dots (Mobile Only) */}

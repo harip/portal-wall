@@ -112,6 +112,14 @@ export default function Portal({ portal, children }: PortalProps) {
       <motion.div
         onMouseMove={handleMouse}
         onMouseLeave={handleMouseLeave}
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          transition: { type: 'spring', damping: 20, stiffness: 100 }
+        }}
+        exit={{ opacity: 0, scale: 0.95, y: 10, transition: { duration: 0.2 } }}
         style={{
           rotateX,
           rotateY,
@@ -119,13 +127,21 @@ export default function Portal({ portal, children }: PortalProps) {
         }}
         className={`
           h-full w-full bg-[var(--portal-bg)] backdrop-blur-xl rounded-2xl flex flex-col
-          transition-all duration-500 relative
+          transition-all duration-500 relative overflow-hidden
           ${isPeeking
             ? 'border-[var(--accent-primary)] ring-2 ring-[var(--accent-glow)] shadow-[0_0_30px_var(--accent-glow)] scale-[1.02]'
             : 'border-[var(--portal-border)] shadow-2xl'
           }
         `}
       >
+        {/* Entrance Flash Effect */}
+        <motion.div
+          initial={{ opacity: 0.5, scale: 0.8 }}
+          animate={{ opacity: 0, scale: 1.5 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="absolute inset-0 bg-white pointer-events-none z-50"
+        />
+
         {/* Glow inner layer */}
         {isPeeking && (
           <div className="absolute inset-0 rounded-2xl bg-[var(--accent-glow)] animate-pulse pointer-events-none" />
