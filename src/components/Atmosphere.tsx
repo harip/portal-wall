@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useThemeStore } from '@/lib/stores/themeStore';
 
@@ -61,8 +62,8 @@ export default function Atmosphere() {
     }, [theme]);
 
     const getBackgroundUrl = () => {
-        if (theme === 'auto') return '/backgrounds/fall.png'; // Mocking auto as fall for now
-        return `/backgrounds/${theme}.png`;
+        const t = theme === 'auto' ? 'fall' : theme;
+        return `/backgrounds/${t}.jpg`;
     };
 
     return (
@@ -73,20 +74,27 @@ export default function Atmosphere() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 1 }}
+                    transition={{ duration: 1.5 }}
                     className="absolute inset-0 w-full h-full"
                 >
-                    {/* Main Background Image */}
-                    <div
-                        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[10s] scale-105"
-                        style={{ backgroundImage: `url(${getBackgroundUrl()})` }}
-                    />
+                    {/* Optimized Background Image using Next.js Image */}
+                    <div className="absolute inset-0 transition-transform duration-[20s] scale-110">
+                        <Image
+                            src={getBackgroundUrl()}
+                            alt={`${theme} background`}
+                            fill
+                            priority
+                            className="object-cover"
+                            sizes="100vw"
+                            quality={75}
+                        />
+                    </div>
 
                     {/* Overlay for readability */}
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
 
                     {/* Gradient Vignette */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30" />
                 </motion.div>
             </AnimatePresence>
 
