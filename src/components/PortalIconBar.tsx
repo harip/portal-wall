@@ -115,50 +115,61 @@ export default function PortalIconBar() {
   };
 
   return (
-    <div className="flex justify-center gap-3">
-      {portalIcons.map((portalIcon) => {
-        const isOpen = isPortalOpen(portalIcon.type);
-        const isTop = isPortalOnTop(portalIcon.type);
+    <div className="relative w-screen max-w-full">
+      {/* Container with horizontal mask for faded edges - refined for visibility */}
+      <div
+        className="relative overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
+        }}
+      >
+        <div className="flex items-center gap-2 overflow-x-auto scroll-smooth no-scrollbar snap-x snap-mandatory py-2 px-6 sm:px-0 sm:justify-center">
+          {portalIcons.map((portalIcon) => {
+            const isOpen = isPortalOpen(portalIcon.type);
+            const isTop = isPortalOnTop(portalIcon.type);
 
-        return (
-          <motion.button
-            key={portalIcon.type}
-            onClick={() => handleIconClick(portalIcon)}
-            whileHover={{ scale: 1.15 }}
-            whileTap={{ scale: 0.9 }}
-            className={`
-              relative flex items-center justify-center rounded-full
-              transition-all duration-300
-              ${isOpen && isTop
-                ? 'shadow-2xl shadow-purple-500/50'
-                : isOpen
-                  ? 'shadow-lg shadow-purple-500/30'
-                  : 'shadow-md hover:shadow-lg hover:shadow-purple-500/20'
-              }
-            `}
-            aria-label={`${isOpen ? 'Focus' : 'Open'} ${portalIcon.label}`}
-          >
-            {/* Icon */}
-            <div className={`
-              text-3xl w-12 h-12 flex items-center justify-center rounded-full
-              bg-gradient-to-br ${portalIcon.gradient}
-            `}>
-              {portalIcon.icon}
-            </div>
+            return (
+              <motion.button
+                key={portalIcon.type}
+                onClick={() => handleIconClick(portalIcon)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className={`
+                  relative flex-shrink-0 flex items-center justify-center rounded-full
+                  transition-all duration-300 snap-center
+                  ${isOpen && isTop
+                    ? 'shadow-xl shadow-purple-500/40'
+                    : isOpen
+                      ? 'shadow-md shadow-purple-500/20'
+                      : 'shadow-sm hover:shadow-md hover:shadow-purple-500/10'
+                  }
+                `}
+                aria-label={`${isOpen ? 'Focus' : 'Open'} ${portalIcon.label}`}
+              >
+                {/* Icon - slightly smaller to save space */}
+                <div className={`
+                  text-2xl w-10 h-10 flex items-center justify-center rounded-full
+                  bg-gradient-to-br ${portalIcon.gradient}
+                `}>
+                  {portalIcon.icon}
+                </div>
 
-            {/* Active indicator dot */}
-            {isOpen && isTop && (
-              <motion.div
-                layoutId="active-portal"
-                className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 shadow-lg shadow-green-500/50"
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-              />
-            )}
-          </motion.button>
-        );
-      })}
+                {/* Active indicator dot */}
+                {isOpen && isTop && (
+                  <motion.div
+                    layoutId="active-portal"
+                    className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 shadow-md shadow-green-500/50"
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                  />
+                )}
+              </motion.button>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }

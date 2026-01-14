@@ -28,10 +28,10 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative">
       {/* Background Grid */}
       <div className="fixed inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] pointer-events-none"></div>
-      
+
       {/* Animated Grid Lights */}
       <GridLights />
-      
+
       {/* Header */}
       <div className="relative z-20 pt-8 pb-2 px-8">
         <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-center">
@@ -41,14 +41,14 @@ export default function Home() {
           Your personal dashboard
         </p>
       </div>
-      
+
       {/* Portal Container */}
       <div className="relative w-full z-10 pb-24">
         <PortalManager />
       </div>
 
       {/* Floating Bottom Toolbar */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30">
+      <div className="fixed bottom-2 left-1/2 -translate-x-1/2 z-30 w-full max-w-full">
         <PortalIconBar />
       </div>
     </main>
