@@ -75,4 +75,39 @@ body {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Theme Backgrounds */
+  .bg-theme-fall {
+    background-image: url('/backgrounds/fall.jpg');
+  }
+
+  .bg-theme-winter {
+    background-image: url('/backgrounds/winter.jpg');
+  }
+
+  .bg-theme-summer {
+    background-image: url('/backgrounds/summer.jpg');
+  }
+
+  .bg-theme-noir {
+    background-image: url('/backgrounds/noir.jpg');
+  }
+
+  @media (max-width: 768px) {
+    .bg-theme-fall {
+      background-image: url('/backgrounds/fall-mobile.jpg');
+    }
+
+    .bg-theme-winter {
+      background-image: url('/backgrounds/winter-mobile.jpg');
+    }
+
+    .bg-theme-summer {
+      background-image: url('/backgrounds/summer-mobile.jpg');
+    }
+
+    .bg-theme-noir {
+      background-image: url('/backgrounds/noir-mobile.jpg');
+    }
+  }
 }

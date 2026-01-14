@@ -61,47 +61,30 @@ export default function Atmosphere() {
         ));
     }, [theme]);
 
-    const [isMobile, setIsMobile] = React.useState(false);
-
-    React.useEffect(() => {
-        setIsMobile(window.innerWidth < 768);
-        const handleResize = () => setIsMobile(window.innerWidth < 768);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    const getBackgroundUrl = () => {
-        const t = theme === 'auto' ? 'fall' : theme;
-        const suffix = isMobile ? '-mobile' : '';
-        return `/backgrounds/${t}${suffix}.jpg`;
+    const getBaseUrl = () => {
+        return theme === 'auto' ? 'fall' : theme;
     };
 
     return (
-        <div className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none z-0 bg-black">
             <AnimatePresence mode="wait">
                 <motion.div
                     key={theme}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 1.5 }}
+                    transition={{ duration: 1 }}
                     className="absolute inset-0 w-full h-full"
                 >
-                    {/* Optimized Background Image */}
-                    <div className="absolute inset-0 transition-transform duration-[20s] scale-110">
-                        <img
-                            src={getBackgroundUrl()}
-                            alt={`${theme} background`}
-                            className="w-full h-full object-cover"
-                            loading="eager"
-                        />
-                    </div>
+                    {/* Background Layer using CSS Utility Classes for maximum reliability */}
+                    <div
+                        className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700 bg-theme-${getBaseUrl()}`}
+                        style={{ backgroundColor: '#1a1a1a' }}
+                    />
 
-                    {/* Overlay for readability */}
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
-
-                    {/* Gradient Vignette */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30" />
+                    {/* Simple Overlays */}
+                    <div className="absolute inset-0 bg-black/30" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
                 </motion.div>
             </AnimatePresence>
 
