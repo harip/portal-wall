@@ -59,7 +59,7 @@ export default function PortalManager() {
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex flex-row overflow-x-auto sm:overflow-visible sm:flex-wrap sm:justify-center items-start gap-4 sm:gap-8 px-[7.5vw] sm:px-12 pt-4 pb-12 no-scrollbar snap-x snap-mandatory sm:snap-none w-full"
+        className="flex flex-row overflow-x-auto sm:overflow-visible sm:flex-wrap sm:justify-center items-start gap-4 sm:gap-8 px-[7.5vw] sm:px-12 pt-2 sm:pt-4 pb-8 sm:pb-12 no-scrollbar snap-x snap-mandatory sm:snap-none w-full"
       >
         <AnimatePresence mode="popLayout">
           {portals.map((portal) => (

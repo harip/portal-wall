@@ -59,10 +59,10 @@ function PortalHeader({ portal }: { portal: PortalState }) {
   };
 
   return (
-    <div className="flex items-center justify-between px-5 py-3 border-b border-white/10 bg-white/5">
+    <div className="flex items-center justify-between px-3 sm:px-5 py-2 sm:py-3 border-b border-white/10 bg-white/5">
       <div className="flex items-center gap-2">
-        <span className="text-lg">{portalHeaderIcons[portal.type]}</span>
-        <h2 className="text-sm font-medium text-white/90">{portal.title}</h2>
+        <span className="text-base sm:text-lg">{portalHeaderIcons[portal.type]}</span>
+        <h2 className="text-xs sm:text-sm font-medium text-white/90">{portal.title}</h2>
       </div>
       <div className="flex items-center gap-3">
         {headerRight}
