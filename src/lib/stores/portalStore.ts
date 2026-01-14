@@ -9,6 +9,8 @@ interface PortalStore {
   closePortal: (type: PortalType) => void;
   hydrated: boolean;
   setHydrated: () => void;
+  peekingPortalType: PortalType | null;
+  setPeekingPortalType: (type: PortalType | null) => void;
 }
 
 const loadPortalsFromStorage = (): PortalState[] => {
@@ -40,6 +42,11 @@ const savePortalsToStorage = (portals: PortalState[]) => {
 export const usePortalStore = create<PortalStore>((set, get) => ({
   portals: [],
   hydrated: false,
+  peekingPortalType: null,
+
+  setPeekingPortalType: (type: PortalType | null) => {
+    set({ peekingPortalType: type });
+  },
 
   setHydrated: () => {
     set({ portals: loadPortalsFromStorage(), hydrated: true });
@@ -47,7 +54,7 @@ export const usePortalStore = create<PortalStore>((set, get) => ({
 
   openPortal: (type: PortalType, title: string) => {
     const existingPortal = get().portals.find((p) => p.type === type);
-    
+
     if (existingPortal) {
       return; // Portal already exists
     }
@@ -72,7 +79,7 @@ export const usePortalStore = create<PortalStore>((set, get) => ({
   bringToFront: (type: PortalType) => {
     const portals = get().portals;
     const portalIndex = portals.findIndex((p) => p.type === type);
-    
+
     if (portalIndex === -1 || portalIndex === 0) {
       return; // Portal doesn't exist or already at front
     }

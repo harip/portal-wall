@@ -16,37 +16,78 @@ import CryptoApp from '@/portals/crypto/CryptoApp';
 import AIApp from '@/portals/ai/AIApp';
 import VoiceApp from '@/portals/voice/VoiceApp';
 
+import { useRef, useState, useEffect } from 'react';
+
 export default function PortalManager() {
   const { portals } = usePortalStore();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  // Don't render anything if there are no portals
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const scrollLeft = scrollRef.current.scrollLeft;
+    const width = scrollRef.current.offsetWidth;
+    const newIndex = Math.round(scrollLeft / (width * 0.85)); // 85vw
+    setActiveIndex(newIndex);
+  };
+
+  const scrollToPortal = (index: number) => {
+    if (!scrollRef.current) return;
+    const width = scrollRef.current.offsetWidth;
+    scrollRef.current.scrollTo({
+      left: index * (width * 0.85),
+      behavior: 'smooth'
+    });
+  };
+
   if (!portals || portals.length === 0) {
     return null;
   }
 
   return (
-    <div className="flex flex-row overflow-x-auto sm:overflow-visible sm:flex-wrap sm:justify-center items-start gap-4 sm:gap-6 px-4 sm:px-6 pt-2 pb-6 no-scrollbar snap-x snap-mandatory sm:snap-none">
-      {portals.map((portal) => (
-        <div
-          key={portal.id}
-          className="w-[85vw] sm:w-[600px] h-[70vh] sm:h-[600px] flex-shrink-0 snap-center sm:snap-align-none"
-        >
-          <Portal portal={portal}>
-            {portal.type === 'weather' && <WeatherApp />}
-            {portal.type === 'clock' && <ClockApp />}
-            {portal.type === 'calendar' && <CalendarApp />}
-            {portal.type === 'countdown' && <CountdownApp />}
-            {portal.type === 'quicksave' && <QuickSaveApp />}
-            {portal.type === 'unitconverter' && <UnitConverterApp />}
-            {portal.type === 'passwordgen' && <PasswordGeneratorApp />}
-            {portal.type === 'news' && <NewsApp />}
-            {portal.type === 'radio' && <RadioApp />}
-            {portal.type === 'crypto' && <CryptoApp />}
-            {portal.type === 'ai' && <AIApp />}
-            {portal.type === 'voice' && <VoiceApp />}
-          </Portal>
-        </div>
-      ))}
+    <div className="flex flex-col items-center w-full">
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex flex-row overflow-x-auto sm:overflow-visible sm:flex-wrap sm:justify-center items-start gap-4 sm:gap-6 px-[7.5vw] sm:px-6 pt-2 pb-6 no-scrollbar snap-x snap-mandatory sm:snap-none w-full"
+      >
+        {portals.map((portal) => (
+          <div
+            key={portal.id}
+            className="w-[85vw] sm:w-[600px] h-[70vh] sm:h-[600px] flex-shrink-0 snap-center sm:snap-align-none"
+          >
+            <Portal portal={portal}>
+              {portal.type === 'weather' && <WeatherApp />}
+              {portal.type === 'clock' && <ClockApp />}
+              {portal.type === 'calendar' && <CalendarApp />}
+              {portal.type === 'countdown' && <CountdownApp />}
+              {portal.type === 'quicksave' && <QuickSaveApp />}
+              {portal.type === 'unitconverter' && <UnitConverterApp />}
+              {portal.type === 'passwordgen' && <PasswordGeneratorApp />}
+              {portal.type === 'news' && <NewsApp />}
+              {portal.type === 'radio' && <RadioApp />}
+              {portal.type === 'crypto' && <CryptoApp />}
+              {portal.type === 'ai' && <AIApp />}
+              {portal.type === 'voice' && <VoiceApp />}
+            </Portal>
+          </div>
+        ))}
+      </div>
+
+      {/* Pagination Dots (Mobile Only) */}
+      <div className="flex sm:hidden gap-2 mt-2">
+        {portals.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => scrollToPortal(i)}
+            className={`h-1.5 rounded-full transition-all duration-300 ${activeIndex === i
+                ? 'w-6 bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-glow)]'
+                : 'w-1.5 bg-white/20'
+              }`}
+            aria-label={`Go to portal ${i + 1}`}
+          />
+        ))}
+      </div>
     </div>
   );
 }

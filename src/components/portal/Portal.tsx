@@ -82,20 +82,62 @@ function PortalHeader({ portal }: { portal: PortalState }) {
   );
 }
 
+import { useMotionValue, useTransform } from 'framer-motion';
+
 export default function Portal({ portal, children }: PortalProps) {
+  const { peekingPortalType } = usePortalStore();
+  const isPeeking = peekingPortalType === portal.type;
+
+  // 3D Tilt Values
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const rotateX = useTransform(y, [0, 400], [5, -5]);
+  const rotateY = useTransform(x, [0, 600], [-5, 5]);
+
+  function handleMouse(event: React.MouseEvent<HTMLDivElement>) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    x.set(event.clientX - rect.left);
+    y.set(event.clientY - rect.top);
+  }
+
+  function handleMouseLeave() {
+    x.set(300); // Reset to center
+    y.set(300);
+  }
+
   return (
     <PortalHeaderProvider>
-      <div
-        className="h-full w-full bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 overflow-hidden flex flex-col"
+      <motion.div
+        onMouseMove={handleMouse}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: 'preserve-3d',
+        }}
+        className={`
+          h-full w-full bg-white/10 backdrop-blur-xl rounded-2xl flex flex-col
+          transition-all duration-500 relative
+          ${isPeeking
+            ? 'border-[var(--accent-primary)] ring-2 ring-[var(--accent-glow)] shadow-[0_0_30px_var(--accent-glow)] scale-[1.02]'
+            : 'border-white/20 shadow-2xl'
+          }
+        `}
       >
+        {/* Glow inner layer */}
+        {isPeeking && (
+          <div className="absolute inset-0 rounded-2xl bg-[var(--accent-glow)] animate-pulse pointer-events-none" />
+        )}
+
         {/* Card Header */}
         <PortalHeader portal={portal} />
 
         {/* Card Content */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto relative z-10">
           {children}
         </div>
-      </div>
+      </motion.div>
     </PortalHeaderProvider>
   );
 }

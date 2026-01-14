@@ -88,20 +88,18 @@ const portalIcons: PortalIcon[] = [
 ];
 
 export default function PortalIconBar() {
-  const { portals, bringToFront, openPortal } = usePortalStore();
+  const { portals, bringToFront, openPortal, setPeekingPortalType } = usePortalStore();
 
   const handleIconClick = (portalIcon: PortalIcon) => {
     const existingPortal = portals.find((p) => p.type === portalIcon.type);
 
     if (existingPortal) {
-      // Portal exists, bring it to front
       bringToFront(portalIcon.type);
     } else {
-      // Portal doesn't exist, open it
       openPortal(portalIcon.type, portalIcon.label);
     }
 
-    // Scroll to top for better UX on mobile
+    setPeekingPortalType(null); // Clear peek on click
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -116,7 +114,6 @@ export default function PortalIconBar() {
 
   return (
     <div className="relative w-screen max-w-full">
-      {/* Container with horizontal mask for faded edges - refined for visibility */}
       <div
         className="relative overflow-hidden"
         style={{
@@ -133,21 +130,22 @@ export default function PortalIconBar() {
               <motion.button
                 key={portalIcon.type}
                 onClick={() => handleIconClick(portalIcon)}
+                onMouseEnter={() => setPeekingPortalType(portalIcon.type)}
+                onMouseLeave={() => setPeekingPortalType(null)}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 className={`
                   relative flex-shrink-0 flex items-center justify-center rounded-full
                   transition-all duration-300 snap-center
                   ${isOpen && isTop
-                    ? 'shadow-xl shadow-purple-500/40'
+                    ? 'shadow-xl shadow-[var(--accent-glow)]'
                     : isOpen
-                      ? 'shadow-md shadow-purple-500/20'
-                      : 'shadow-sm hover:shadow-md hover:shadow-purple-500/10'
+                      ? 'shadow-md shadow-[var(--accent-glow)]'
+                      : 'shadow-sm hover:shadow-md hover:shadow-[var(--accent-glow)]'
                   }
                 `}
                 aria-label={`${isOpen ? 'Focus' : 'Open'} ${portalIcon.label}`}
               >
-                {/* Icon - slightly smaller to save space */}
                 <div className={`
                   text-2xl w-10 h-10 flex items-center justify-center rounded-full
                   bg-gradient-to-br ${portalIcon.gradient}
@@ -155,11 +153,11 @@ export default function PortalIconBar() {
                   {portalIcon.icon}
                 </div>
 
-                {/* Active indicator dot */}
                 {isOpen && isTop && (
                   <motion.div
                     layoutId="active-portal"
-                    className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 shadow-md shadow-green-500/50"
+                    className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full shadow-md shadow-[var(--accent-glow)]"
+                    style={{ backgroundColor: 'var(--accent-primary)' }}
                     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
