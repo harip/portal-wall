@@ -25,6 +25,7 @@ const portalHeaderIcons: Record<PortalType, string> = {
   crypto: '📈',
   ai: '🤖',
   voice: '🎙️',
+  settings: '⚙️',
 };
 
 function PortalHeader({ portal }: { portal: PortalState }) {
@@ -117,11 +118,11 @@ export default function Portal({ portal, children }: PortalProps) {
           transformStyle: 'preserve-3d',
         }}
         className={`
-          h-full w-full bg-white/10 backdrop-blur-xl rounded-2xl flex flex-col
+          h-full w-full bg-[var(--portal-bg)] backdrop-blur-xl rounded-2xl flex flex-col
           transition-all duration-500 relative
           ${isPeeking
             ? 'border-[var(--accent-primary)] ring-2 ring-[var(--accent-glow)] shadow-[0_0_30px_var(--accent-glow)] scale-[1.02]'
-            : 'border-white/20 shadow-2xl'
+            : 'border-[var(--portal-border)] shadow-2xl'
           }
         `}
       >

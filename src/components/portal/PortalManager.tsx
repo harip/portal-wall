@@ -15,6 +15,7 @@ import RadioApp from '@/portals/radio/RadioApp';
 import CryptoApp from '@/portals/crypto/CryptoApp';
 import AIApp from '@/portals/ai/AIApp';
 import VoiceApp from '@/portals/voice/VoiceApp';
+import SettingsApp from '@/portals/settings/SettingsApp';
 
 import { useRef, useState, useEffect } from 'react';
 
@@ -34,11 +35,21 @@ export default function PortalManager() {
   const scrollToPortal = (index: number) => {
     if (!scrollRef.current) return;
     const width = scrollRef.current.offsetWidth;
+    // Each portal is 85vw. The gap is 4 (16px). 
+    // The snap-center does the heavy lifting, but we need to get close.
+    const scrollAmount = index * (width * 0.85 + 16);
     scrollRef.current.scrollTo({
-      left: index * (width * 0.85),
+      left: scrollAmount,
       behavior: 'smooth'
     });
   };
+
+  // Automatically scroll to front when a new portal is opened or brought to front
+  useEffect(() => {
+    if (portals.length > 0) {
+      scrollToPortal(0);
+    }
+  }, [portals[0]?.id]);
 
   if (!portals || portals.length === 0) {
     return null;
@@ -69,6 +80,7 @@ export default function PortalManager() {
               {portal.type === 'crypto' && <CryptoApp />}
               {portal.type === 'ai' && <AIApp />}
               {portal.type === 'voice' && <VoiceApp />}
+              {portal.type === 'settings' && <SettingsApp />}
             </Portal>
           </div>
         ))}
@@ -81,8 +93,8 @@ export default function PortalManager() {
             key={i}
             onClick={() => scrollToPortal(i)}
             className={`h-1.5 rounded-full transition-all duration-300 ${activeIndex === i
-                ? 'w-6 bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-glow)]'
-                : 'w-1.5 bg-white/20'
+              ? 'w-6 bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-glow)]'
+              : 'w-1.5 bg-white/20'
               }`}
             aria-label={`Go to portal ${i + 1}`}
           />

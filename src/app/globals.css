@@ -5,21 +5,72 @@
 :root {
   --background: #0a0a0a;
   --foreground: #ededed;
+
+  /* Theme Tokens */
+  --accent-primary: #8b5cf6;
+  --accent-glow: rgba(139, 92, 246, 0.4);
+  --portal-bg: rgba(255, 255, 255, 0.05);
+  --portal-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: blur(20px);
+}
+
+[data-theme='noir'] {
+  --background: #050505;
+  --foreground: #ffffff;
+  --accent-primary: #ffffff;
+  --accent-glow: rgba(255, 255, 255, 0.2);
+  --portal-bg: rgba(255, 255, 255, 0.02);
+  --portal-border: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme='fall'] {
+  --background: #1a0f0a;
+  --foreground: #fef3c7;
+  --accent-primary: #d97706;
+  /* Amber-600 */
+  --accent-glow: rgba(217, 119, 6, 0.3);
+  --portal-bg: rgba(69, 26, 3, 0.4);
+  /* Brownish */
+  --portal-border: rgba(251, 191, 36, 0.2);
+}
+
+[data-theme='winter'] {
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --accent-primary: #38bdf8;
+  /* Sky-400 */
+  --accent-glow: rgba(56, 189, 248, 0.3);
+  --portal-bg: rgba(30, 41, 59, 0.6);
+  --portal-border: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme='summer'] {
+  --background: #064e3b;
+  /* Emerald-900 */
+  --foreground: #ecfdf5;
+  --accent-primary: #fbbf24;
+  /* Amber-400 */
+  --accent-glow: rgba(251, 191, 36, 0.4);
+  --portal-bg: rgba(6, 78, 59, 0.5);
+  --portal-border: rgba(110, 231, 183, 0.3);
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: background 0.5s ease, color 0.5s ease;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;

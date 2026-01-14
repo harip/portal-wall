@@ -85,6 +85,12 @@ const portalIcons: PortalIcon[] = [
     label: 'Voice Memo',
     gradient: 'from-red-500 to-orange-500',
   },
+  {
+    type: 'settings',
+    icon: '⚙️',
+    label: 'Settings',
+    gradient: 'from-gray-400 to-slate-600',
+  },
 ];
 
 export default function PortalIconBar() {
