@@ -12,16 +12,16 @@ interface ItemListProps {
 
 function formatTimestamp(timestamp: number): string {
   const date = new Date(timestamp);
-  const dateStr = date.toLocaleDateString('en-US', { 
-    month: 'short', 
-    day: 'numeric', 
-    year: 'numeric' 
+  const dateStr = date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
   });
-  const timeStr = date.toLocaleTimeString('en-US', { 
-    hour: '2-digit', 
-    minute: '2-digit', 
+  const timeStr = date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
     second: '2-digit',
-    hour12: true 
+    hour12: true
   });
   return `${dateStr} ${timeStr}`;
 }
@@ -37,8 +37,8 @@ export default function ItemList({ items, categoryFilter = 'all' }: ItemListProp
   const [editCategory, setEditCategory] = useState<Category>('other');
 
   // Filter items by category
-  const filteredItems = categoryFilter === 'all' 
-    ? items 
+  const filteredItems = categoryFilter === 'all'
+    ? items
     : items.filter(item => item.category === categoryFilter);
 
   // Sort by createdAt descending (newest first)
@@ -80,8 +80,8 @@ export default function ItemList({ items, categoryFilter = 'all' }: ItemListProp
       <div className="h-full flex flex-col items-center justify-center p-8 text-center">
         <p className="text-white/60 mb-2">No items yet</p>
         <p className="text-white/40 text-sm">
-          {categoryFilter === 'all' 
-            ? 'Add items using the input above' 
+          {categoryFilter === 'all'
+            ? 'Add items using the input above'
             : `No ${categoryFilter} items yet`}
         </p>
       </div>
@@ -144,16 +144,16 @@ export default function ItemList({ items, categoryFilter = 'all' }: ItemListProp
                   </div>
                 </div>
               ) : (
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
                     <span className="text-xl flex-shrink-0">{categoryConfig.emoji}</span>
                     <h4 className="text-sm font-semibold text-white truncate">
                       {item.title}
                     </h4>
                   </div>
 
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <p className="text-xs text-white/50 whitespace-nowrap">
+                  <div className="flex items-center justify-between sm:justify-end gap-3 flex-shrink-0">
+                    <p className="text-[10px] sm:text-xs text-white/50 whitespace-nowrap">
                       {formatTimestamp(item.createdAt)}
                     </p>
                     <div className="flex gap-1">

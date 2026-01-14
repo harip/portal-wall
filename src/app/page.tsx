@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import PortalManager from '@/components/portal/PortalManager';
 import GridLights from '@/components/GridLights';
 import PortalIconBar from '@/components/PortalIconBar';
+import DashboardHeader from '@/components/DashboardHeader';
 import { usePortalStore } from '@/lib/stores/portalStore';
 
 export default function Home() {
@@ -25,22 +26,15 @@ export default function Home() {
   }, [hydrated, portals.length, openPortal]);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative">
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-x-hidden">
       {/* Background Grid */}
       <div className="fixed inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] pointer-events-none"></div>
 
       {/* Animated Grid Lights */}
       <GridLights />
 
-      {/* Header */}
-      <div className="relative z-20 pt-8 pb-2 px-8">
-        <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-center">
-          Wall
-        </h1>
-        <p className="text-center text-slate-300 mt-2 text-sm">
-          Your personal dashboard
-        </p>
-      </div>
+      {/* Dashboard Header */}
+      <DashboardHeader userName="Hari" />
 
       {/* Portal Container */}
       <div className="relative w-full z-10 pb-24">
