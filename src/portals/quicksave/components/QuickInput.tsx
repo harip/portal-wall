@@ -49,7 +49,6 @@ export default function QuickInput() {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Name, title, or link..."
             className="flex-1 min-w-0 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-white/30 text-sm"
-            autoFocus
           />
         </div>
 

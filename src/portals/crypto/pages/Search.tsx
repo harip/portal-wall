@@ -60,7 +60,6 @@ export default function Search() {
                         value={query}
                         onChange={(e) => handleSearch(e.target.value)}
                         className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-10 py-3 text-white placeholder-white/40 focus:outline-none focus:bg-white/10"
-                        autoFocus
                     />
                     {query && (
                         <button
