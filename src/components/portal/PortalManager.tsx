@@ -15,8 +15,6 @@ import RadioApp from '@/portals/radio/RadioApp';
 import CryptoApp from '@/portals/crypto/CryptoApp';
 import AIApp from '@/portals/ai/AIApp';
 import VoiceApp from '@/portals/voice/VoiceApp';
-import { motion, AnimatePresence } from 'framer-motion';
-import { portalAnimations, portalTransition } from '@/lib/animations';
 
 export default function PortalManager() {
   const { portals } = usePortalStore();
@@ -26,48 +24,12 @@ export default function PortalManager() {
     return null;
   }
 
-  // Get the active portal (first in array)
-  const activePortal = portals[0];
-  const remainingPortals = portals.slice(1);
-
   return (
-    <div className="flex flex-col sm:flex-row flex-wrap justify-center items-start gap-6 px-6 pt-2 pb-6">
-      {activePortal && (
-        <div className="w-full sm:w-[600px] h-[600px] flex-shrink-0 relative">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={activePortal.id}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              variants={portalAnimations}
-              transition={portalTransition}
-              className="absolute inset-0"
-            >
-              <Portal portal={activePortal}>
-                {activePortal.type === 'weather' && <WeatherApp />}
-                {activePortal.type === 'clock' && <ClockApp />}
-                {activePortal.type === 'calendar' && <CalendarApp />}
-                {activePortal.type === 'countdown' && <CountdownApp />}
-                {activePortal.type === 'quicksave' && <QuickSaveApp />}
-                {activePortal.type === 'unitconverter' && <UnitConverterApp />}
-                {activePortal.type === 'passwordgen' && <PasswordGeneratorApp />}
-                {activePortal.type === 'news' && <NewsApp />}
-                {activePortal.type === 'radio' && <RadioApp />}
-                {activePortal.type === 'crypto' && <CryptoApp />}
-                {activePortal.type === 'ai' && <AIApp />}
-                {activePortal.type === 'voice' && <VoiceApp />}
-              </Portal>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      )}
-
-      {/* Show remaining portals */}
-      {remainingPortals.map((portal) => (
+    <div className="flex flex-row overflow-x-auto sm:overflow-visible sm:flex-wrap sm:justify-center items-start gap-4 sm:gap-6 px-4 sm:px-6 pt-2 pb-6 no-scrollbar snap-x snap-mandatory sm:snap-none">
+      {portals.map((portal) => (
         <div
           key={portal.id}
-          className="w-full sm:w-[600px] h-[600px] flex-shrink-0"
+          className="w-[85vw] sm:w-[600px] h-[70vh] sm:h-[600px] flex-shrink-0 snap-center sm:snap-align-none"
         >
           <Portal portal={portal}>
             {portal.type === 'weather' && <WeatherApp />}
