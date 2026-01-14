@@ -61,9 +61,19 @@ export default function Atmosphere() {
         ));
     }, [theme]);
 
+    const [isMobile, setIsMobile] = React.useState(false);
+
+    React.useEffect(() => {
+        setIsMobile(window.innerWidth < 768);
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const getBackgroundUrl = () => {
         const t = theme === 'auto' ? 'fall' : theme;
-        return `/backgrounds/${t}.jpg`;
+        const suffix = isMobile ? '-mobile' : '';
+        return `/backgrounds/${t}${suffix}.jpg`;
     };
 
     return (
@@ -77,16 +87,13 @@ export default function Atmosphere() {
                     transition={{ duration: 1.5 }}
                     className="absolute inset-0 w-full h-full"
                 >
-                    {/* Optimized Background Image using Next.js Image */}
+                    {/* Optimized Background Image */}
                     <div className="absolute inset-0 transition-transform duration-[20s] scale-110">
-                        <Image
+                        <img
                             src={getBackgroundUrl()}
                             alt={`${theme} background`}
-                            fill
-                            priority
-                            className="object-cover"
-                            sizes="100vw"
-                            quality={75}
+                            className="w-full h-full object-cover"
+                            loading="eager"
                         />
                     </div>
 

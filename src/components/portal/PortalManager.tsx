@@ -19,7 +19,7 @@ import VoiceApp from '@/portals/voice/VoiceApp';
 import SettingsApp from '@/portals/settings/SettingsApp';
 
 export default function PortalManager() {
-  const { portals } = usePortalStore();
+  const { portals, lastInteraction } = usePortalStore();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -43,12 +43,12 @@ export default function PortalManager() {
     });
   };
 
-  // Automatically scroll to front when a new portal is opened or brought to front
+  // Automatically scroll to front when a new portal is opened, brought to front, or focused
   useEffect(() => {
     if (portals.length > 0) {
       scrollToPortal(0);
     }
-  }, [portals[0]?.id]);
+  }, [portals[0]?.id, lastInteraction]);
 
   if (!portals || portals.length === 0) {
     return null;

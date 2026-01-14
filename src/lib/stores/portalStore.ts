@@ -11,6 +11,7 @@ interface PortalStore {
   setHydrated: () => void;
   peekingPortalType: PortalType | null;
   setPeekingPortalType: (type: PortalType | null) => void;
+  lastInteraction: number;
 }
 
 const loadPortalsFromStorage = (): PortalState[] => {
@@ -43,6 +44,7 @@ export const usePortalStore = create<PortalStore>((set, get) => ({
   portals: [],
   hydrated: false,
   peekingPortalType: null,
+  lastInteraction: 0,
 
   setPeekingPortalType: (type: PortalType | null) => {
     set({ peekingPortalType: type });
@@ -72,7 +74,7 @@ export const usePortalStore = create<PortalStore>((set, get) => ({
 
     // Add new portal at the beginning (top) of the array
     const newPortals = [newPortal, ...get().portals];
-    set({ portals: newPortals });
+    set({ portals: newPortals, lastInteraction: Date.now() });
     savePortalsToStorage(newPortals);
   },
 
@@ -80,8 +82,11 @@ export const usePortalStore = create<PortalStore>((set, get) => ({
     const portals = get().portals;
     const portalIndex = portals.findIndex((p) => p.type === type);
 
-    if (portalIndex === -1 || portalIndex === 0) {
-      return; // Portal doesn't exist or already at front
+    if (portalIndex === -1) return;
+
+    if (portalIndex === 0) {
+      set({ lastInteraction: Date.now() });
+      return;
     }
 
     // Move the portal to the beginning of the array (front/top)
@@ -91,7 +96,7 @@ export const usePortalStore = create<PortalStore>((set, get) => ({
       ...portals.slice(portalIndex + 1),
     ];
 
-    set({ portals: newPortals });
+    set({ portals: newPortals, lastInteraction: Date.now() });
     savePortalsToStorage(newPortals);
   },
 
